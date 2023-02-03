@@ -1,29 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/local%20database/local_database.dart';
 
 import '../todo/tasks.dart';
 
 class TasksProvider extends ChangeNotifier {
-  List<todoTask> _list = [
-    todoTask(title: 'Param', discription: 'discription'),
-    todoTask(title: 'Param2', discription: 'discription2'),
-    todoTask(title: 'Param3', discription: 'discription3'),
-    todoTask(title: 'Param4', discription: 'discription4'),
-    todoTask(title: 'Param5', discription: 'discription5'),
-    todoTask(title: 'Param6', discription: 'discription6'),
-  ];
-  List getTasks() {
-    return _list;
+  List<todoTask> _list = [];
+  void getTasks(List<todoTask> lt) {
+    _list = lt;
+    // notifyListeners();
   }
 
-  void addToList(String str1, String str2) {
-    _list.add(todoTask(title: str1, discription: str2));
+  List get TaskList => _list;
+
+  Future<bool> addToList(todoTask Task) async {
+    try {
+      await DataBaseHelper.instance.addToDatabase(Task);
+      _list.add(Task);
+      notifyListeners();
+      return true;
+    } catch (error) {
+      print(error);
+      return false;
+    }
   }
 
-  void delete(String str1, String str2) {
-    int length = _list.length;
-    for (int i = 0; i < length; i++) {
-      var item = _list[i];
-      if (item.title == str1 && item.discription == str2) _list.removeAt(i);
+  Future<bool> delete(int idd) async {
+    try {
+      await DataBaseHelper.instance.removeFromDatabase(idd);
+      _list.removeWhere((item) => item.id == idd);
+      notifyListeners();
+      return true;
+    } catch (error) {
+      print(error);
+      return false;
     }
   }
 }

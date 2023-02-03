@@ -1,11 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_app/provider/modes_provider.dart';
+import 'package:todo_app/bottom%20navigation%20bar/bottom_navigation_bar.dart';
+import 'package:todo_app/floating_action_button/floating_action_button.dart';
+import 'package:todo_app/local%20database/local_database.dart';
 import 'package:todo_app/provider/tasks_provider.dart';
 import 'package:todo_app/resources/color_resources.dart';
 import 'package:todo_app/resources/image_assets.dart';
 import 'package:todo_app/resources/text_resource.dart';
+import 'package:todo_app/resources/themes.dart';
+import 'package:todo_app/todo/tasks.dart';
 
 enum SampleItem { itemOne, itemTwo, itemThree }
 
@@ -26,9 +30,35 @@ class _HomePageState extends State<HomePage> {
   static const SizedBox _space = SizedBox(
     height: 5,
   );
+  void _onDelete(int id) {
+    Provider.of<TasksProvider>(context, listen: false)
+        .delete(id)
+        .then((value) => {
+              if (value)
+                {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Data has been deleted',
+                      ),
+                    ),
+                  ),
+                }
+              else
+                {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Data not deleted an error happened!',
+                      ),
+                    ),
+                  ),
+                }
+            });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final _provider = Provider.of<Modes>(context);
     final _provider2 = Provider.of<TasksProvider>(context);
     return SafeArea(
       child: Scaffold(
@@ -69,7 +99,9 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Spacer(),
                     IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          showSearch(context: context, delegate: Search());
+                        },
                         icon: const Icon(
                           Icons.search,
                         )),
@@ -91,73 +123,144 @@ class _HomePageState extends State<HomePage> {
               _space,
               Expanded(
                 flex: 10,
-                child: SizedBox(
-                  height: 450,
-                  child: statee == 0
-                      ? ListView.builder(
-                          padding: EdgeInsets.all(10),
-                          itemExtent: 100,
-                          itemCount: _provider2.getTasks().length,
-                          itemBuilder: (context, ind) => SizedBox(
-                            height: 100,
-                            width: 200,
-                            child: Card(
-                              color: ColorManager.secondary,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15)),
-                              child: Center(
-                                child: Text(
-                                  _provider2.getTasks()[ind].title,
-                                  style: TextStyle(fontSize: 40),
-                                ),
-                              ),
-                            ),
+                child: FutureBuilder<List<todoTask>>(
+                    future: DataBaseHelper.instance.loadTasksFromDatabase(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<List<todoTask>> snapshot) {
+                      if (!snapshot.hasData) {
+                        print(snapshot.data);
+                        return const Center(
+                          child: Text(
+                            AppStrings.DatabaseEmptyResponse,
+                            style: TextStyle(
+                                color: ColorManager.secondary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 30),
                           ),
-                        )
-                      : GridView.builder(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            childAspectRatio: 1,
-                            crossAxisSpacing: 5,
-                            mainAxisSpacing: 5,
-                          ),
-                          itemCount: _provider2.getTasks().length,
-                          itemBuilder: (BuildContext context, int index) =>
-                              Card(
-                            color: ColorManager.secondary,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15)),
-                            child: GridTile(
-                              header: Text(
-                                _provider2.getTasks()[index].title,
-                                style: TextStyle(fontSize: 40),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  _provider2.getTasks()[index].discription,
-                                  style: TextStyle(fontSize: 18),
-                                ),
-                              ),
-                              footer: Row(
-                                children: [
-                                  const Spacer(),
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      Icons.delete_outline_outlined,
-                                      size: 30,
-                                      color: Colors.white,
+                        );
+                      }
+                      _provider2.getTasks(snapshot.data!.toList());
+                      return SizedBox(
+                        height: 450,
+                        child: statee == 0
+                            ? ListView.builder(
+                                padding: EdgeInsets.all(10),
+                                itemExtent: 100,
+                                itemCount: _provider2.TaskList.length,
+                                itemBuilder: (context, ind) => SizedBox(
+                                  height: 100,
+                                  width: 200,
+                                  child: Card(
+                                    // color: ColorManager.secondary,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(15)),
+                                    child: Row(
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {},
+                                          icon: const ImageIcon(
+                                            AssetImage('assets/img_4.png'),
+                                            size: 30,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              _provider2.TaskList[ind].title,
+                                              style: TextStyle(fontSize: 40),
+                                            ),
+                                            Text(
+                                              "   ${_provider2.TaskList[ind].discription}",
+                                              style: TextStyle(fontSize: 18),
+                                            ),
+                                          ],
+                                        ),
+                                        const Spacer(),
+                                        IconButton(
+                                          onPressed: () {
+                                            _onDelete(
+                                                _provider2.TaskList[ind].id);
+                                          },
+                                          icon: const Icon(
+                                            Icons.delete_outline_outlined,
+                                            size: 30,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ],
+                                ),
+                              )
+                            : GridView.builder(
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 1,
+                                  crossAxisSpacing: 5,
+                                  mainAxisSpacing: 5,
+                                ),
+                                itemCount: _provider2.TaskList.length,
+                                itemBuilder:
+                                    (BuildContext context, int index) => Card(
+                                  // color: ColorManager.secondary,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: GridTile(
+                                      header: Text(
+                                        _provider2.TaskList[index].title,
+                                        style: TextStyle(fontSize: 40),
+                                      ),
+                                      footer: Row(
+                                        children: [
+                                          const Spacer(),
+                                          IconButton(
+                                            onPressed: () {},
+                                            icon: const ImageIcon(
+                                              AssetImage('assets/img_4.png'),
+                                              size: 30,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          IconButton(
+                                            onPressed: () {
+                                              _onDelete(_provider2
+                                                  .TaskList[index].id);
+                                            },
+                                            icon: const Icon(
+                                              Icons.delete_outline_outlined,
+                                              size: 30,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          _provider2
+                                              .TaskList[index].discription,
+                                          style: TextStyle(fontSize: 18),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
-                ),
+                      );
+                    }),
               ),
-              Spacer(),
+              // Spacer(),
             ],
           ),
         ),
@@ -169,70 +272,7 @@ class _HomePageState extends State<HomePage> {
               isScrollControlled: true,
               isDismissible: true,
               builder: (context) {
-                return Card(
-                  elevation: 20,
-                  shadowColor: ColorManager.secondary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewInsets.bottom),
-                    child: Padding(
-                      padding: const EdgeInsets.all(5),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Center(
-                            child: Container(
-                              color: ColorManager.darkPrimary,
-                              height: 3,
-                              width: 150,
-                            ),
-                          ),
-                          _space,
-                          _space,
-                          Text(
-                            AppStrings.todoTitle,
-                            style: Theme.of(context).textTheme.headline6,
-                          ),
-                          _space,
-                          TextFrom(
-                            hint: AppStrings.todoTitle2,
-                          ),
-                          _space,
-                          _space,
-                          Text(
-                            AppStrings.Task,
-                            style: Theme.of(context).textTheme.headline6,
-                          ),
-                          _space,
-                          TextFrom(
-                            hint: AppStrings.Task2,
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Center(
-                            child: SizedBox(
-                              width: 200,
-                              height: 50,
-                              child: ElevatedButton(
-                                  onPressed: () {
-                                    _provider2.addToList(
-                                        _title.text, _discrip.text);
-                                  },
-                                  child: Text(
-                                    'Save',
-                                    style: TextStyle(fontSize: 30),
-                                  )),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
+                return FloatingButton();
               },
             );
           },
@@ -243,80 +283,143 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: BottomAppBar(
-          shape: CircularNotchedRectangle(),
-          child: Container(
-            height: 60,
-            // color: ColorManager.black,
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Expanded(
-                  child: TextButton.icon(
-                    //  iconSize: 50.0,
-                    // padding: EdgeInsets.only(left: 28.0),
-                    icon: Column(
-                      children: [
-                        Expanded(
-                          flex: 3,
-                          child: Icon(
-                            Icons.home_outlined,
-                            color: _selectedpageindex == 0
-                                ? ColorManager.secondary
-                                : ColorManager.grey1,
-                            size: 35,
-                          ),
+        bottomNavigationBar: BottomBarForNAvigation(),
+      ),
+    );
+  }
+}
+
+class Search extends SearchDelegate {
+  List<todoTask> result = [];
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    // TODO: implement buildActions
+    return [
+      IconButton(
+          onPressed: () {
+            if (query.isEmpty) {
+              close(context, null);
+            } else {
+              query = '';
+            }
+          },
+          icon: Icon(Icons.clear))
+    ];
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    // TODO: implement buildLeading
+    return IconButton(
+        onPressed: () => close(context, null), icon: Icon(Icons.arrow_back));
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    void _onDelete(int id) {
+      Provider.of<TasksProvider>(context, listen: false)
+          .delete(id)
+          .then((value) => {
+                if (value)
+                  {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Data has been deleted',
                         ),
-                        Expanded(
-                            flex: 1,
-                            child: Text(
-                              'Home',
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: _selectedpageindex == 0
-                                    ? ColorManager.secondary
-                                    : ColorManager.grey1,
-                              ),
-                            ))
-                      ],
+                      ),
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _selectedpageindex = 0;
-                      });
-                    },
-                    label: Text(''),
+                  }
+                else
+                  {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Data not deleted an error happened!',
+                        ),
+                      ),
+                    ),
+                  }
+              });
+    }
+
+    final _provider = Provider.of<TasksProvider>(context);
+
+    // TODO: implement buildResults
+    if (result.isNotEmpty) {
+      result.clear();
+    }
+    final _xx = _provider.TaskList;
+    String word1 = "";
+    String word2 = "";
+    String word3 = "";
+    for (int i = 0; i < _xx.length; i++) {
+      word1 = _xx[i].discription.toLowerCase();
+      print(word1);
+      word3 = _xx[i].title.toLowerCase();
+      word2 = query.toLowerCase();
+      if (word1.contains(word2) || word3.contains(word2)) {
+        result.add(_xx[i]);
+      }
+    }
+    if (result.isEmpty || query.isEmpty) {
+      return Center(
+        child: Text(
+          "$query Not Fount",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      );
+    }
+    return SizedBox(
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      child: ListView.builder(
+        padding: EdgeInsets.all(10),
+        itemExtent: 100,
+        itemCount: result.length,
+        itemBuilder: (context, ind) => SizedBox(
+          height: 100,
+          width: 200,
+          child: Card(
+            // color: ColorManager.secondary,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            child: Row(
+              children: [
+                IconButton(
+                  onPressed: () {},
+                  icon: const ImageIcon(
+                    AssetImage('assets/img_4.png'),
+                    size: 30,
+                    color: Colors.white,
                   ),
                 ),
-                Expanded(
-                  child: TextButton.icon(
-                    //  iconSize: 50.0,
-                    // padding: EdgeInsets.only(left: 28.0),
-                    icon: _provider.ModeState == 0
-                        ? Mode(
-                            name: "Night light",
-                            isSelected: _selectedpageindex,
-                            icon: 1,
-                          )
-                        : Mode(
-                            name: "Day light",
-                            isSelected: _selectedpageindex,
-                            icon: 0),
-                    onPressed: () {
-                      print("hello");
-                      if (_provider.ModeState == 0) {
-                        _provider.setToDark();
-                        print("provider  ${_provider.ModeState}");
-                      } else {
-                        _provider.setToLight();
-                        print("MY NAME is SAM ${_provider.ModeState}");
-                      }
-                      setState(() {
-                        _selectedpageindex = 1;
-                      });
-                    },
-                    label: Text(''),
+                const SizedBox(
+                  width: 10,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      result[ind].title,
+                      style: TextStyle(fontSize: 40),
+                    ),
+                    Text(
+                      "   ${result[ind].discription}",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                IconButton(
+                  onPressed: () {
+                    _onDelete(result[ind].id);
+                  },
+                  icon: const Icon(
+                    Icons.delete_outline_outlined,
+                    size: 30,
+                    color: Colors.white,
                   ),
                 ),
               ],
@@ -326,79 +429,106 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-}
-
-class TextFrom extends StatelessWidget {
-  late String hint;
-  TextFrom({Key? key, required this.hint}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      style: Theme.of(context).textTheme.subtitle2,
-      enableSuggestions: true,
-      decoration: InputDecoration(
-        errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: ColorManager.secondary),
-          borderRadius: BorderRadius.circular(5),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: ColorManager.secondary, width: 3),
-          borderRadius: BorderRadius.circular(5),
-        ),
-        errorStyle: const TextStyle(
-          fontWeight: FontWeight.bold,
-        ),
-        hintText: hint,
-        hintStyle: Theme.of(context).textTheme.subtitle2,
-        fillColor: Colors.white,
-        filled: true,
-        enabledBorder:
-            OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
-        focusedErrorBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: ColorManager.secondary, width: 3),
-          borderRadius: BorderRadius.circular(5),
-        ),
-      ),
-    );
-  }
-}
+  Widget buildSuggestions(BuildContext context) {
+    void _onDelete(int id) {
+      Provider.of<TasksProvider>(context, listen: false)
+          .delete(id)
+          .then((value) => {
+                if (value)
+                  {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Data has been deleted',
+                        ),
+                      ),
+                    ),
+                  }
+                else
+                  {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Data not deleted an error happened!',
+                        ),
+                      ),
+                    ),
+                  }
+              });
+    }
 
-class Mode extends StatelessWidget {
-  final int isSelected;
-  final String name;
-  final int icon;
-  const Mode(
-      {Key? key,
-      required this.name,
-      required this.isSelected,
-      required this.icon})
-      : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          flex: 3,
-          child: Icon(
-            icon == 0 ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
-            color:
-                isSelected == 1 ? ColorManager.secondary : ColorManager.grey1,
-            size: 35,
+    // TODO: implement buildSuggestions
+
+    List<todoTask> _suggestions = [];
+    final input = query.toLowerCase();
+    final _provider = Provider.of<TasksProvider>(context).TaskList;
+    String word1, word2;
+    for (var item in _provider) {
+      word1 = item.title.toLowerCase();
+      word2 = item.discription.toLowerpCase();
+      if (word1.contains(input) || word2.contains(input)) {
+        _suggestions.add(item);
+      }
+    }
+    return SizedBox(
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      child: ListView.builder(
+        padding: EdgeInsets.all(10),
+        itemExtent: 100,
+        itemCount: _suggestions.length,
+        itemBuilder: (context, ind) => SizedBox(
+          height: 100,
+          width: 200,
+          child: Card(
+            // color: ColorManager.secondary,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            child: Row(
+              children: [
+                IconButton(
+                  onPressed: () {},
+                  icon: const ImageIcon(
+                    AssetImage('assets/img_4.png'),
+                    size: 30,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      _suggestions[ind].title,
+                      style: TextStyle(fontSize: 40),
+                    ),
+                    Text(
+                      "   ${_suggestions[ind].discription}",
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                IconButton(
+                  onPressed: () {
+                    _onDelete(_suggestions[ind].id);
+                  },
+                  icon: const Icon(
+                    Icons.delete_outline_outlined,
+                    size: 30,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-        Expanded(
-            flex: 1,
-            child: Text(
-              name,
-              style: TextStyle(
-                fontSize: 10,
-                color: isSelected == 1
-                    ? ColorManager.secondary
-                    : ColorManager.grey1,
-              ),
-            ))
-      ],
+      ),
     );
   }
 }

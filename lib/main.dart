@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:todo_app/provider/modes_provider.dart';
 import 'package:todo_app/provider/tasks_provider.dart';
 import 'package:todo_app/resources/themes.dart';
 import 'package:todo_app/splash_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
-  runApp(
-    MyApp(),
-  );
+  WidgetsFlutterBinding();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -19,16 +17,23 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => Modes()),
         ChangeNotifierProvider(create: (context) => TasksProvider()),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        // themeMode: ThemeMode.light,
-        // darkTheme: Themes.darkTheme,
-        theme: Themes.lightTheme,
-        home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      ),
+      child: ChangeNotifierProvider(
+          create: (BuildContext context) => Themes()..getTheme(),
+          builder: (context, _) {
+            final themeMode = Provider.of<Themes>(context).themeMode;
+            return ScreenUtilInit(
+              designSize: const Size(360, 690),
+              builder: (BuildContext context, Widget? child) => MaterialApp(
+                debugShowCheckedModeBanner: false,
+                themeMode: themeMode,
+                darkTheme: Themes.darkTheme,
+                theme: Themes.lightTheme,
+                home: const MyHomePage(title: 'Flutter Demo Home Page'),
+              ),
+            );
+          }),
     );
   }
 }

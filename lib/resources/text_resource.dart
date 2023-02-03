@@ -2,6 +2,7 @@
 
 class AppStrings {
   static const String title = "My Tasks";
+  static const String DatabaseEmptyResponse = "There is no Tasks";
   static const String titleArabic = "مهامى";
   static const String splashString1 = "Good";
   static const String splashString2 = "Consistency";

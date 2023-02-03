@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class ColorManager {
   static const Color primary = Color(0xffFFFFFF);
   static const Color white = Color(0xffFFFFFF);
+  static const Color sheetModelColorDarkMode = Color(0xffFFF7FF);
   static const Color darkPrimary = Color(0xff0E0D0E);
   static const Color splashBackground = Color(0xffBF0000);
   static const Color secondary = Color(0xffFF4444);
