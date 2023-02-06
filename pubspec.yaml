@@ -35,13 +35,16 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   flutter_launcher_icons: "^0.11.0"
-  flutter_bloc: ^8.1.1
+  flutter_bloc:
   shared_preferences: ^2.0.17
   provider: ^6.0.5
   sqflite:
   path:
   flutter_screenutil:
   path_provider: ^2.0.12
+  equatable: ^2.0.5
+
+
 
 flutter_icons:
   android: "launcher_icon"

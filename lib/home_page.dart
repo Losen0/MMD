@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/bottom%20navigation%20bar/bottom_navigation_bar.dart';
 import 'package:todo_app/floating_action_button/floating_action_button.dart';
-import 'package:todo_app/local%20database/local_database.dart';
+import 'package:todo_app/Helper/local_database_helper.dart';
 import 'package:todo_app/provider/tasks_provider.dart';
 import 'package:todo_app/resources/color_resources.dart';
 import 'package:todo_app/resources/image_assets.dart';
@@ -30,6 +30,7 @@ class _HomePageState extends State<HomePage> {
   static const SizedBox _space = SizedBox(
     height: 5,
   );
+
   void _onDelete(int id) {
     Provider.of<TasksProvider>(context, listen: false)
         .delete(id)
@@ -82,7 +83,7 @@ class _HomePageState extends State<HomePage> {
                           print(statee);
                         });
                       },
-                      child: statee == 1
+                      child: statee == 0
                           ? ImageIcon(
                               AssetImage(ImageAssets.menuIcon),
                               size: 30,
@@ -467,7 +468,7 @@ class Search extends SearchDelegate {
     String word1, word2;
     for (var item in _provider) {
       word1 = item.title.toLowerCase();
-      word2 = item.discription.toLowerpCase();
+      word2 = item.discription.toLowerCase();
       if (word1.contains(input) || word2.contains(input)) {
         _suggestions.add(item);
       }

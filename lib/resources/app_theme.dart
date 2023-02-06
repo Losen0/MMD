@@ -1,31 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:todo_app/resources/color_resources.dart';
-import 'package:todo_app/todo/tasks.dart';
 
-class Themes extends ChangeNotifier {
-  late bool theme;
-  void getTheme() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    theme = prefs.getBool('state') ?? true;
-    change(theme);
-  }
+import 'color_resources.dart';
 
-  ThemeMode themeMode = ThemeMode.light;
-  void change(bool isOn) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    themeMode = isOn ? ThemeMode.dark : ThemeMode.light;
-    theme = isOn ? false : true;
-    if (isOn) {
-      prefs.setBool('state', true);
-    } else {
-      prefs.setBool('state', false);
-    }
-    print(themeMode);
-    notifyListeners();
-  }
+enum AppTheme {
+  lightTheme,
+  darkTheme;
+}
 
-  static final darkTheme = ThemeData(
+final appTheme = {
+  AppTheme.darkTheme: ThemeData(
       bottomAppBarColor: ColorManager.darkPrimary,
       // brightness: Brightness.dark,
       dialogBackgroundColor: ColorManager.darkGrey,
@@ -74,9 +57,8 @@ class Themes extends ChangeNotifier {
           contentTextStyle: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.bold,
-          )));
-
-  static final lightTheme = ThemeData(
+          ))),
+  AppTheme.lightTheme: ThemeData(
     bottomAppBarColor: ColorManager.primary,
     dialogBackgroundColor: ColorManager.secondary,
     navigationBarTheme: NavigationBarThemeData(
@@ -121,7 +103,5 @@ class Themes extends ChangeNotifier {
     iconTheme: IconThemeData(
       color: ColorManager.secondary,
     ),
-  );
-
-  ///
-}
+  ),
+};

@@ -13,7 +13,6 @@ class BottomBarForNAvigation extends StatefulWidget {
 
 class _BottomBarForNAvigationState extends State<BottomBarForNAvigation> {
   var _selectedpageindex = 0;
-
   @override
   Widget build(BuildContext context) {
     final _provider = Provider.of<Themes>(context);
@@ -21,8 +20,8 @@ class _BottomBarForNAvigationState extends State<BottomBarForNAvigation> {
       shape: CircularNotchedRectangle(),
       child: Container(
         height: 60,
-        color:
-            _provider.theme ? ColorManager.primary : ColorManager.darkPrimary,
+        // color:
+        //     _provider.theme ? ColorManager.primary : ColorManager.darkPrimary,
         child: Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -80,6 +79,7 @@ class _BottomBarForNAvigationState extends State<BottomBarForNAvigation> {
                         icon: 0),
                 onPressed: () {
                   setState(() {
+                    //_bloc.add(OnChange());
                     _provider.change(_provider.theme);
                   });
                 },

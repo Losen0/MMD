@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:todo_app/local%20database/local_database.dart';
+import 'package:todo_app/Helper/local_database_helper.dart';
 import 'package:todo_app/provider/tasks_provider.dart';
 import 'package:todo_app/todo/tasks.dart';
 import '../resources/color_resources.dart';
@@ -28,32 +28,6 @@ class _FloatingButtonState extends State<FloatingButton> {
       int id = prefs.getInt('id') ?? 0;
       var Task =
           todoTask(id: id, title: title, discription: discription, complete: 0);
-      Provider.of<TasksProvider>(context, listen: false)
-          .addToList(Task)
-          .then((value) => {
-                if (value)
-                  {
-                    Navigator.pop(context),
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          'Data has been added',
-                        ),
-                      ),
-                    ),
-                  }
-                else
-                  {
-                    Navigator.pop(context),
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          'Data not Saved an error happened!',
-                        ),
-                      ),
-                    ),
-                  }
-              });
 
       print(title);
       print(discription);
@@ -68,7 +42,7 @@ class _FloatingButtonState extends State<FloatingButton> {
     var _space = SizedBox(
       height: 5,
     );
-    final _provider = Provider.of<TasksProvider>(context);
+    //final _provider = Provider.of<TasksProvider>(context);
     final _provider2 = Provider.of<Themes>(context);
     return Form(
       key: _globalKey,
