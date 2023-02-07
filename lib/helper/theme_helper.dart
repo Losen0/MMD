@@ -6,12 +6,13 @@ class ThemeCashHelper {
   }
 
   Future<void> cacheThemeMode(int themeMode) async {
-    final prefs = await getShared();
+    final prefs = await SharedPreferences.getInstance();
     prefs.setInt("ThemeMode", themeMode);
+    print("CAshed");
   }
 
-  Future<int> getCachedThemeMode() async {
-    final SharedPreferences prefs = await getShared();
-    return prefs.getInt('ThemeMode') ?? 0;
+  Future<int?> getCachedThemeMode() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('ThemeMode');
   }
 }

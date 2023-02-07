@@ -25,18 +25,20 @@ class DatabaseBloc extends Bloc<DatabaseEvent, DatabaseState> {
         // final dp = DataBaseHelper.instance;
         todoTask task = event.task;
         tasks.add(task);
+        print(task.title);
         dp.addToDatabase(task);
-        emit(AddedSuccessfullyState(task: task));
+        emit(AddedSuccessfullyState(list: tasks));
       } else if (event is DeletFromDataBaseEvent) {
         for (int i = 0; i < tasks.length; i++) {
           if (tasks[i].id == event.task.id) {
             tasks.removeAt(i);
+            print("REMOVED\n");
             break;
           }
         }
         todoTask task = event.task;
         dp.removeFromDatabase(task.id);
-        emit(DeletedSuccessfullyState(task: task));
+        emit(DeletedSuccessfullyState(list: tasks));
       }
     });
   }

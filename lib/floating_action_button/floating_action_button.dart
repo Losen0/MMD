@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:todo_app/Helper/local_database_helper.dart';
 import 'package:todo_app/bloc_database/bloc_database_bloc.dart';
-import 'package:todo_app/provider/tasks_provider.dart';
 import 'package:todo_app/todo/tasks.dart';
 import '../resources/color_resources.dart';
 import '../resources/text_resource.dart';
-import '../resources/themes.dart';
 
 class FloatingButton extends StatefulWidget {
   const FloatingButton({Key? key}) : super(key: key);
@@ -21,24 +17,6 @@ class _FloatingButtonState extends State<FloatingButton> {
   TextEditingController _title = TextEditingController();
   TextEditingController _discription = TextEditingController();
   GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
-
-  _onSave(String title, String discription) async {
-    final bool isValid = _globalKey.currentState!.validate();
-    //close the keyboard if it still open
-    if (isValid) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      int id = prefs.getInt('id') ?? 0;
-      var task =
-          todoTask(id: id, title: title, discription: discription, complete: 0);
-      context.read<DatabaseBloc>().add(AddToDataBaseEvent(task: task));
-      print(title);
-      print(discription);
-      _globalKey.currentState!.save();
-      id++;
-      prefs.setInt('id', id);
-      Navigator.pop(context);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,8 +63,6 @@ class _FloatingButtonState extends State<FloatingButton> {
                         style: Theme.of(context).textTheme.headline6,
                       ),
                       _space,
-
-// Form(key:_globalKey,child: child),
                       TextFormField(
                         controller: _title,
                         validator: (value) {
@@ -130,7 +106,6 @@ class _FloatingButtonState extends State<FloatingButton> {
                         style: Theme.of(context).textTheme.headline6,
                       ),
                       _space,
-
                       TextFormField(
                         controller: _discription,
                         validator: (value) {
@@ -177,7 +152,6 @@ class _FloatingButtonState extends State<FloatingButton> {
                               onPressed: () async {
                                 final bool isValid =
                                     _globalKey.currentState!.validate();
-                                //close the keyboard if it still open
                                 if (isValid) {
                                   SharedPreferences prefs =
                                       await SharedPreferences.getInstance();

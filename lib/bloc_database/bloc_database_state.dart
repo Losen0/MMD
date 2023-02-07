@@ -20,19 +20,19 @@ class LoadedDatabaseState extends DatabaseState {
 }
 
 class DeletedSuccessfullyState extends DatabaseState {
-  final todoTask task;
+  final List<todoTask> list;
 
-  DeletedSuccessfullyState({required this.task});
+  DeletedSuccessfullyState({required this.list});
   @override
   // TODO: implement props
-  List<Object?> get props => [task];
+  List<Object?> get props => [list];
 }
 
 class AddedSuccessfullyState extends DatabaseState {
-  final todoTask task;
+  final List<todoTask> list;
 
-  AddedSuccessfullyState({required this.task});
+  AddedSuccessfullyState({required this.list});
   @override
   // TODO: implement props
-  List<Object?> get props => [task];
+  List<Object?> get props => [list];
 }

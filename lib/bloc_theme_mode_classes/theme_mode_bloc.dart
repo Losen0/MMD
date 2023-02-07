@@ -23,11 +23,12 @@ class ThemeModeBloc extends Bloc<ThemeModeEvent, ThemeModeState> {
             .firstWhere((element) => element.index == themeModeIndex);
         emit(LoadedThemeState(themeData: appTheme[themeMode] as ThemeData));
       } else if (event is ThemeChangeEvent) {
-        final themeModeIndex = event.theme.index;
+        var themeModeIndex = event.theme.index;
+        themeModeIndex == 0 ? themeModeIndex = 1 : themeModeIndex = 0;
         themeState = themeModeIndex;
         print(themeModeIndex);
         print(appTheme[AppTheme.values[themeModeIndex]]);
-        print(AppTheme.values);
+        print("CURRENT THEME =${AppTheme.values[themeState]} ");
         await ThemeCashHelper().cacheThemeMode(themeModeIndex);
         emit(LoadedThemeState(themeData: appTheme[event.theme] as ThemeData));
       }

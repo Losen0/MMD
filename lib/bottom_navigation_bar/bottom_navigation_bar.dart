@@ -22,55 +22,55 @@ class _BottomBarForNAvigationState extends State<BottomBarForNAvigation> {
     // final _provider = Provider.of<Themes>(context);
     return BottomAppBar(
       shape: CircularNotchedRectangle(),
-      child: BlocBuilder<ThemeModeBloc, ThemeModeState>(
-        builder: (context, state) {
-          final themeMode = ThemeModeBloc().themeState;
-          return Container(
-            height: 60,
-            // color:
-            //     _provider.theme ? ColorManager.primary : ColorManager.darkPrimary,
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Expanded(
-                  child: TextButton.icon(
-                    //  iconSize: 50.0,
-                    // padding: EdgeInsets.only(left: 28.0),
-                    icon: Column(
-                      children: [
-                        Expanded(
-                          flex: 3,
-                          child: Icon(
-                            Icons.home_outlined,
+      child: Container(
+        height: 60,
+        // color:
+        //     _provider.theme ? ColorManager.primary : ColorManager.darkPrimary,
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Expanded(
+              child: TextButton.icon(
+                //  iconSize: 50.0,
+                // padding: EdgeInsets.only(left: 28.0),
+                icon: Column(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: Icon(
+                        Icons.home_outlined,
+                        color: _selectedpageindex == 0
+                            ? ColorManager.secondary
+                            : ColorManager.grey1,
+                        size: 35,
+                      ),
+                    ),
+                    Expanded(
+                        flex: 1,
+                        child: Text(
+                          'Home',
+                          style: TextStyle(
+                            fontSize: 10,
                             color: _selectedpageindex == 0
                                 ? ColorManager.secondary
                                 : ColorManager.grey1,
-                            size: 35,
                           ),
-                        ),
-                        Expanded(
-                            flex: 1,
-                            child: Text(
-                              'Home',
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: _selectedpageindex == 0
-                                    ? ColorManager.secondary
-                                    : ColorManager.grey1,
-                              ),
-                            ))
-                      ],
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _selectedpageindex = 0;
-                      });
-                    },
-                    label: Text(''),
-                  ),
+                        ))
+                  ],
                 ),
-                Expanded(
+                onPressed: () {
+                  setState(() {
+                    _selectedpageindex = 0;
+                  });
+                },
+                label: Text(''),
+              ),
+            ),
+            BlocBuilder<ThemeModeBloc, ThemeModeState>(
+              builder: (context, state) {
+                final themeMode = ThemeModeBloc().themeState;
+                return Expanded(
                   child: TextButton.icon(
                     //  iconSize: 50.0,
                     // padding: EdgeInsets.only(left: 28.0),
@@ -95,11 +95,11 @@ class _BottomBarForNAvigationState extends State<BottomBarForNAvigation> {
                     },
                     label: Text(''),
                   ),
-                ),
-              ],
+                );
+              },
             ),
-          );
-        },
+          ],
+        ),
       ),
     );
   }
