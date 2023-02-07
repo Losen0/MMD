@@ -6,7 +6,7 @@ abstract class DatabaseState extends Equatable {}
 class DatabaseInitial extends DatabaseState {
   @override
   // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [];
 }
 
 class LoadedDatabaseState extends DatabaseState {
@@ -19,8 +19,20 @@ class LoadedDatabaseState extends DatabaseState {
   List<Object?> get props => [list];
 }
 
-class UpDateState extends DatabaseState {
+class DeletedSuccessfullyState extends DatabaseState {
+  final todoTask task;
+
+  DeletedSuccessfullyState({required this.task});
   @override
   // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [task];
+}
+
+class AddedSuccessfullyState extends DatabaseState {
+  final todoTask task;
+
+  AddedSuccessfullyState({required this.task});
+  @override
+  // TODO: implement props
+  List<Object?> get props => [task];
 }

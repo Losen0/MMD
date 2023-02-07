@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_app/splash_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'Bloc_ThemeMODE_Classes/theme_mode_bloc.dart';
+import 'bloc_theme_mode_classes/theme_mode_bloc.dart';
 import 'Bloc_database/bloc_database_bloc.dart';
 
 void main() async {
@@ -17,29 +17,30 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-        providers: [
-          BlocProvider<DatabaseBloc>(
-            create: (BuildContext context) =>
-                DatabaseBloc()..add(GetLocalDatabaseEvent()),
-          ),
-        ],
-        child: BlocProvider<ThemeModeBloc>(
+      providers: [
+        BlocProvider<DatabaseBloc>(
+          create: (BuildContext context) =>
+              DatabaseBloc()..add(GetLocalDatabaseEvent()),
+        ),
+        BlocProvider<ThemeModeBloc>(
           create: (context) => ThemeModeBloc()..add(GetCurrentThemeEvent()),
-          child: BlocBuilder<ThemeModeBloc, ThemeModeState>(
-              builder: (context, state) {
-            if (state is LoadedThemeState) {
-              return ScreenUtilInit(
-                designSize: const Size(360, 690),
-                builder: (BuildContext context, Widget? child) => MaterialApp(
-                  debugShowCheckedModeBanner: false,
-                  theme: state.themeData,
-                  home: const MyHomePage(title: 'Flutter Demo Home Page'),
-                ),
-              );
-            }
-            return Container();
-          }),
-        ));
+        ),
+      ],
+      child:
+          BlocBuilder<ThemeModeBloc, ThemeModeState>(builder: (context, state) {
+        if (state is LoadedThemeState) {
+          return ScreenUtilInit(
+            designSize: const Size(360, 690),
+            builder: (BuildContext context, Widget? child) => MaterialApp(
+              debugShowCheckedModeBanner: false,
+              theme: state.themeData,
+              home: const MyHomePage(title: 'Flutter Demo Home Page'),
+            ),
+          );
+        }
+        return Container();
+      }),
+    );
   }
 }
 

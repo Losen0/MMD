@@ -9,12 +9,6 @@ class GetLocalDatabaseEvent extends DatabaseEvent {
   List<Object?> get props => throw UnimplementedError();
 }
 
-class LoadingDataBaseEvent extends DatabaseEvent {
-  @override
-  // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
-}
-
 class AddToDataBaseEvent extends DatabaseEvent {
   final todoTask task;
 

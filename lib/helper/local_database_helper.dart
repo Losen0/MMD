@@ -2,11 +2,15 @@ import 'dart:io';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:todo_app/Helper/local_database_helper.dart';
 import 'package:todo_app/todo/tasks.dart';
 
+//DataBaseHelper x = DataBaseHelper();
+
 class DataBaseHelper {
-  DataBaseHelper._constructor();
-  static final DataBaseHelper instance = DataBaseHelper._constructor();
+  DataBaseHelper._();
+
+  static final DataBaseHelper instance = DataBaseHelper._();
   static Database? _database;
   Future<Database> get database async {
     return _database ??= await _initDatabase();

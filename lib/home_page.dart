@@ -1,15 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
-import 'package:todo_app/bottom%20navigation%20bar/bottom_navigation_bar.dart';
+import 'package:todo_app/bloc_database/bloc_database_bloc.dart';
 import 'package:todo_app/floating_action_button/floating_action_button.dart';
-import 'package:todo_app/Helper/local_database_helper.dart';
 import 'package:todo_app/provider/tasks_provider.dart';
 import 'package:todo_app/resources/color_resources.dart';
 import 'package:todo_app/resources/image_assets.dart';
 import 'package:todo_app/resources/text_resource.dart';
-import 'package:todo_app/resources/themes.dart';
 import 'package:todo_app/todo/tasks.dart';
+
+import 'bottom_navigation_bar/bottom_navigation_bar.dart';
 
 enum SampleItem { itemOne, itemTwo, itemThree }
 
@@ -31,201 +32,126 @@ class _HomePageState extends State<HomePage> {
     height: 5,
   );
 
-  void _onDelete(int id) {
-    Provider.of<TasksProvider>(context, listen: false)
-        .delete(id)
-        .then((value) => {
-              if (value)
-                {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        'Data has been deleted',
-                      ),
-                    ),
-                  ),
-                }
-              else
-                {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        'Data not deleted an error happened!',
-                      ),
-                    ),
-                  ),
-                }
-            });
+  void _onDelete(todoTask task) {
+    //  context.read<DatabaseBloc>().add(DeletFromDataBaseEvent(task: task));
+    // Provider.of<TasksProvider>(context, listen: false)
+    //     .delete(id)
+    //     .then((value) => {
+    //           if (value)
+    //             {
+    //               ScaffoldMessenger.of(context).showSnackBar(
+    //                 const SnackBar(
+    //                   content: Text(
+    //                     'Data has been deleted',
+    //                   ),
+    //                 ),
+    //               ),
+    //             }
+    //           else
+    //             {
+    //               ScaffoldMessenger.of(context).showSnackBar(
+    //                 const SnackBar(
+    //                   content: Text(
+    //                     'Data not deleted an error happened!',
+    //                   ),
+    //                 ),
+    //               ),
+    //             }
+    //         });
   }
 
   @override
   Widget build(BuildContext context) {
-    final _provider2 = Provider.of<TasksProvider>(context);
+    //   final _provider2 = Provider.of<TasksProvider>(context);
     return SafeArea(
       child: Scaffold(
-        body: Padding(
-          padding: EdgeInsets.fromLTRB(10, 10, 5, 0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 1,
-                child: Row(
-                  //   mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          if (statee == 0)
-                            statee = 1;
-                          else
-                            statee = 0;
-                          print(statee);
-                        });
-                      },
-                      child: statee == 0
-                          ? ImageIcon(
-                              AssetImage(ImageAssets.menuIcon),
-                              size: 30,
-                            )
-                          : Icon(
-                              Icons.menu,
-                              size: 30,
-                            ),
-                    ),
-                    Spacer(),
-                    Text(
-                      AppStrings.title,
-                      style: Theme.of(context).textTheme.headline1,
-                    ),
-                    Spacer(),
-                    IconButton(
-                        onPressed: () {
-                          showSearch(context: context, delegate: Search());
-                        },
-                        icon: const Icon(
-                          Icons.search,
-                        )),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              Expanded(
-                flex: 1,
-                child: Text(
-                  AppStrings.openingSentence,
-                  style: Theme.of(context).textTheme.bodyText1,
-                ),
-              ),
-              _space,
-              _space,
-              _space,
-              Expanded(
-                flex: 10,
-                child: FutureBuilder<List<todoTask>>(
-                    future: DataBaseHelper.instance.loadTasksFromDatabase(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<List<todoTask>> snapshot) {
-                      if (!snapshot.hasData) {
-                        print(snapshot.data);
-                        return const Center(
-                          child: Text(
-                            AppStrings.DatabaseEmptyResponse,
-                            style: TextStyle(
-                                color: ColorManager.secondary,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 30),
-                          ),
-                        );
-                      }
-                      _provider2.getTasks(snapshot.data!.toList());
-                      return SizedBox(
-                        height: 450,
-                        child: statee == 0
-                            ? ListView.builder(
-                                padding: EdgeInsets.all(10),
-                                itemExtent: 100,
-                                itemCount: _provider2.TaskList.length,
-                                itemBuilder: (context, ind) => SizedBox(
-                                  height: 100,
-                                  width: 200,
-                                  child: Card(
-                                    // color: ColorManager.secondary,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(15)),
-                                    child: Row(
-                                      children: [
-                                        IconButton(
-                                          onPressed: () {},
-                                          icon: const ImageIcon(
-                                            AssetImage('assets/img_4.png'),
-                                            size: 30,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              _provider2.TaskList[ind].title,
-                                              style: TextStyle(fontSize: 40),
-                                            ),
-                                            Text(
-                                              "   ${_provider2.TaskList[ind].discription}",
-                                              style: TextStyle(fontSize: 18),
-                                            ),
-                                          ],
-                                        ),
-                                        const Spacer(),
-                                        IconButton(
-                                          onPressed: () {
-                                            _onDelete(
-                                                _provider2.TaskList[ind].id);
-                                          },
-                                          icon: const Icon(
-                                            Icons.delete_outline_outlined,
-                                            size: 30,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ],
+        body: BlocProvider<DatabaseBloc>(
+          create: (context) => DatabaseBloc()..add(GetLocalDatabaseEvent()),
+          child: BlocBuilder<DatabaseBloc, DatabaseState>(
+            builder: (context, state) {
+              if (state is LoadedDatabaseState ||
+                  state is AddedSuccessfullyState ||
+                  state is DeletedSuccessfullyState) {
+                final bloc = context.read<DatabaseBloc>().tasks;
+                return Padding(
+                  padding: EdgeInsets.fromLTRB(10, 10, 5, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Row(
+                          //   mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  if (statee == 0)
+                                    statee = 1;
+                                  else
+                                    statee = 0;
+                                  print(statee);
+                                });
+                              },
+                              child: statee == 0
+                                  ? ImageIcon(
+                                      AssetImage(ImageAssets.menuIcon),
+                                      size: 30,
+                                    )
+                                  : Icon(
+                                      Icons.menu,
+                                      size: 30,
                                     ),
-                                  ),
-                                ),
-                              )
-                            : GridView.builder(
-                                gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  childAspectRatio: 1,
-                                  crossAxisSpacing: 5,
-                                  mainAxisSpacing: 5,
-                                ),
-                                itemCount: _provider2.TaskList.length,
-                                itemBuilder:
-                                    (BuildContext context, int index) => Card(
-                                  // color: ColorManager.secondary,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(15)),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: GridTile(
-                                      header: Text(
-                                        _provider2.TaskList[index].title,
-                                        style: TextStyle(fontSize: 40),
-                                      ),
-                                      footer: Row(
+                            ),
+                            Spacer(),
+                            Text(
+                              AppStrings.title,
+                              style: Theme.of(context).textTheme.headline1,
+                            ),
+                            Spacer(),
+                            IconButton(
+                                onPressed: () {
+                                  showSearch(
+                                      context: context, delegate: Search());
+                                },
+                                icon: const Icon(
+                                  Icons.search,
+                                )),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          AppStrings.openingSentence,
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
+                      ),
+                      _space,
+                      _space,
+                      _space,
+                      Expanded(
+                        flex: 10,
+                        child: SizedBox(
+                          height: 450,
+                          child: statee == 0
+                              ? ListView.builder(
+                                  padding: EdgeInsets.all(10),
+                                  itemExtent: 100,
+                                  itemCount: bloc.length,
+                                  itemBuilder: (context, ind) => SizedBox(
+                                    height: 100,
+                                    width: 200,
+                                    child: Card(
+                                      // color: ColorManager.secondary,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(15)),
+                                      child: Row(
                                         children: [
-                                          const Spacer(),
                                           IconButton(
                                             onPressed: () {},
                                             icon: const ImageIcon(
@@ -234,10 +160,29 @@ class _HomePageState extends State<HomePage> {
                                               color: Colors.white,
                                             ),
                                           ),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                bloc[ind].title,
+                                                style: TextStyle(fontSize: 40),
+                                              ),
+                                              Text(
+                                                "   ${bloc[ind].discription}",
+                                                style: TextStyle(fontSize: 18),
+                                              ),
+                                            ],
+                                          ),
+                                          const Spacer(),
                                           IconButton(
                                             onPressed: () {
-                                              _onDelete(_provider2
-                                                  .TaskList[index].id);
+                                              _onDelete(bloc[ind]);
                                             },
                                             icon: const Icon(
                                               Icons.delete_outline_outlined,
@@ -247,22 +192,77 @@ class _HomePageState extends State<HomePage> {
                                           ),
                                         ],
                                       ),
-                                      child: Center(
-                                        child: Text(
-                                          _provider2
-                                              .TaskList[index].discription,
-                                          style: TextStyle(fontSize: 18),
+                                    ),
+                                  ),
+                                )
+                              : GridView.builder(
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    childAspectRatio: 1,
+                                    crossAxisSpacing: 5,
+                                    mainAxisSpacing: 5,
+                                  ),
+                                  itemCount: bloc.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) => Card(
+                                    // color: ColorManager.secondary,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(15)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: GridTile(
+                                        header: Text(
+                                          bloc[index].title,
+                                          style: TextStyle(fontSize: 40),
+                                        ),
+                                        footer: Row(
+                                          children: [
+                                            const Spacer(),
+                                            IconButton(
+                                              onPressed: () {},
+                                              icon: const ImageIcon(
+                                                AssetImage('assets/img_4.png'),
+                                                size: 30,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            IconButton(
+                                              onPressed: () {
+                                                _onDelete(bloc[index]);
+                                              },
+                                              icon: const Icon(
+                                                Icons.delete_outline_outlined,
+                                                size: 30,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            bloc[index].discription,
+                                            style: TextStyle(fontSize: 18),
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                      );
-                    }),
-              ),
-              // Spacer(),
-            ],
+                        ),
+                      ),
+                      // Spacer(),
+                    ],
+                  ),
+                );
+              }
+              return const Center(
+                  child: SizedBox(
+                      height: 60,
+                      width: 60,
+                      child: CircularProgressIndicator()));
+            },
           ),
         ),
         floatingActionButton: InkWell(
@@ -533,3 +533,124 @@ class Search extends SearchDelegate {
     );
   }
 }
+
+/*
+*  SizedBox(
+                        height: 450,
+                        child: statee == 0
+                            ? ListView.builder(
+                                padding: EdgeInsets.all(10),
+                                itemExtent: 100,
+                                itemCount: _provider2.TaskList.length,
+                                itemBuilder: (context, ind) => SizedBox(
+                                  height: 100,
+                                  width: 200,
+                                  child: Card(
+                                    // color: ColorManager.secondary,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(15)),
+                                    child: Row(
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {},
+                                          icon: const ImageIcon(
+                                            AssetImage('assets/img_4.png'),
+                                            size: 30,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              _provider2.TaskList[ind].title,
+                                              style: TextStyle(fontSize: 40),
+                                            ),
+                                            Text(
+                                              "   ${_provider2.TaskList[ind].discription}",
+                                              style: TextStyle(fontSize: 18),
+                                            ),
+                                          ],
+                                        ),
+                                        const Spacer(),
+                                        IconButton(
+                                          onPressed: () {
+                                            _onDelete(
+                                                _provider2.TaskList[ind].id);
+                                          },
+                                          icon: const Icon(
+                                            Icons.delete_outline_outlined,
+                                            size: 30,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : GridView.builder(
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 1,
+                                  crossAxisSpacing: 5,
+                                  mainAxisSpacing: 5,
+                                ),
+                                itemCount: _provider2.TaskList.length,
+                                itemBuilder:
+                                    (BuildContext context, int index) => Card(
+                                  // color: ColorManager.secondary,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: GridTile(
+                                      header: Text(
+                                        _provider2.TaskList[index].title,
+                                        style: TextStyle(fontSize: 40),
+                                      ),
+                                      footer: Row(
+                                        children: [
+                                          const Spacer(),
+                                          IconButton(
+                                            onPressed: () {},
+                                            icon: const ImageIcon(
+                                              AssetImage('assets/img_4.png'),
+                                              size: 30,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          IconButton(
+                                            onPressed: () {
+                                              _onDelete(_provider2
+                                                  .TaskList[index].id);
+                                            },
+                                            icon: const Icon(
+                                              Icons.delete_outline_outlined,
+                                              size: 30,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          _provider2
+                                              .TaskList[index].discription,
+                                          style: TextStyle(fontSize: 18),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                      )
+* */

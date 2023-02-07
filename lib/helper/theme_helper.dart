@@ -1,5 +1,4 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:todo_app/resources/app_theme.dart';
 
 class ThemeCashHelper {
   Future<SharedPreferences> getShared() async {
@@ -11,8 +10,8 @@ class ThemeCashHelper {
     prefs.setInt("ThemeMode", themeMode);
   }
 
-  Future<int?> getCachedThemeMode() async {
+  Future<int> getCachedThemeMode() async {
     final SharedPreferences prefs = await getShared();
-    return prefs.getInt('ThemeMode');
+    return prefs.getInt('ThemeMode') ?? 0;
   }
 }

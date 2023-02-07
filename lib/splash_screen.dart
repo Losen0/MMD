@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:todo_app/home_page.dart';
 import 'package:todo_app/resources/color_resources.dart';

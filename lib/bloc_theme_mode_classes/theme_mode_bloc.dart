@@ -11,19 +11,25 @@ part 'theme_mode_event.dart';
 part 'theme_mode_state.dart';
 
 class ThemeModeBloc extends Bloc<ThemeModeEvent, ThemeModeState> {
+  int themeState = 0;
   ThemeModeBloc() : super(ThemeModeInitial()) {
     on<ThemeModeEvent>((event, emit) async {
       // TODO: implement event handler
       if (event is GetCurrentThemeEvent) {
         final themeModeIndex =
             await ThemeCashHelper().getCachedThemeMode() ?? 0;
+        themeState = themeModeIndex;
         final themeMode = AppTheme.values
             .firstWhere((element) => element.index == themeModeIndex);
-        emit(LoadedThemeState(themeData: appTheme[themeMode]));
+        emit(LoadedThemeState(themeData: appTheme[themeMode] as ThemeData));
       } else if (event is ThemeChangeEvent) {
         final themeModeIndex = event.theme.index;
+        themeState = themeModeIndex;
+        print(themeModeIndex);
+        print(appTheme[AppTheme.values[themeModeIndex]]);
+        print(AppTheme.values);
         await ThemeCashHelper().cacheThemeMode(themeModeIndex);
-        emit(LoadedThemeState(themeData: appTheme[themeModeIndex]!));
+        emit(LoadedThemeState(themeData: appTheme[event.theme] as ThemeData));
       }
     });
   }
