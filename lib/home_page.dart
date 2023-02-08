@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 import 'package:todo_app/bloc_database/bloc_database_bloc.dart';
 import 'package:todo_app/floating_action_button/floating_action_button.dart';
 import 'package:todo_app/resources/color_resources.dart';
