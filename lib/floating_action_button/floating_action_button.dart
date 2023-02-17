@@ -110,7 +110,7 @@ class _FloatingButtonState extends State<FloatingButton> {
                       space,
                       space,
                       Text(
-                        AppStrings.Task,
+                        AppStrings.task,
                         style: Theme.of(context).textTheme.headline6,
                       ),
                       space,
@@ -138,7 +138,7 @@ class _FloatingButtonState extends State<FloatingButton> {
                           errorStyle: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
-                          hintText: AppStrings.Task2,
+                          hintText: AppStrings.task2,
                           hintStyle: Theme.of(context).textTheme.subtitle2,
                           fillColor: Colors.white,
                           filled: true,

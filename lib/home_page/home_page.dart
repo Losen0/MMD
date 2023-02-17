@@ -1,8 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_app/bloc_database/bloc_database_bloc.dart';
 import 'package:todo_app/floating_action_button/floating_action_button.dart';
+import 'package:todo_app/home_page/search_delegate_bar.dart';
+import 'package:todo_app/resources/app_numbers.dart';
 import 'package:todo_app/resources/color_resources.dart';
 import 'package:todo_app/resources/image_assets.dart';
 import 'package:todo_app/resources/text_resource.dart';
@@ -11,490 +12,281 @@ import '../todo_model/tasks.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
-
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  int statee = 0;
+  /// this flagForHomeStyle is to change from list mode to grid mode ant the opposite
+  bool flagForHomeStyle = true;
 
-  static const SizedBox _space = SizedBox(
-    height: 5,
-  );
+  /// the next variables is used for taking Spaces in the home page using SizedBox widget
+  static const SizedBox _space16 = SizedBox(height: AppSizes.size6);
+
+  ///Leading Icon in the first line of the home Page "List Or Grid " Icons
+  Widget _leadingMenuIcon() {
+    return InkWell(
+      onTap: () {
+        setState(() {
+          flagForHomeStyle = !flagForHomeStyle;
+        });
+      },
+      child: flagForHomeStyle
+          ? ImageIcon(
+              AssetImage(ImageAssets.menuIcon),
+              size: AppSizes.size15,
+            )
+          : const Icon(
+              Icons.menu,
+              size: AppSizes.size15,
+            ),
+    );
+  }
+
+  /// this is for the Search Icon Button which trigger the Search context
+  Widget _searchIconButton(List<ToDoTask> bloc) {
+    return IconButton(
+      onPressed: () {
+        showSearch(
+          context: context,
+          delegate: Search(allTasks: bloc),
+        );
+      },
+      icon: const Icon(
+        Icons.search,
+      ),
+    );
+  }
+
+  /// the following is to for Texts in HomePage
+  Widget _text(String txt, bool align, [TextStyle? textStyle]) {
+    return FittedBox(
+        alignment: align ? Alignment.centerLeft : Alignment.center,
+        fit: BoxFit.scaleDown,
+        child: Padding(
+          padding: const EdgeInsets.all(AppSizes.num3),
+          child: Text(
+            txt,
+            style: textStyle ?? Theme.of(context).textTheme.labelLarge,
+          ),
+        ));
+  }
+
+  /// The next is the Row which contain the menu icon the title and the Search icon
+  Widget _firstLineOfHomePageRowWidget(List<ToDoTask> bloc) {
+    return Expanded(
+      flex: AppSizesInt.num1,
+      child: Row(
+        children: [
+          _leadingMenuIcon(),
+          const Spacer(),
+          _text(AppStrings.title, false),
+          const Spacer(),
+          _searchIconButton(bloc),
+        ],
+      ),
+    );
+  }
+
+  /// List View Option to view tasks in the style of a list "one task per Row"
+  Widget _listViewOption(List<ToDoTask> bloc) {
+    return ListView.builder(
+      padding: const EdgeInsets.all(10),
+      itemExtent: 100,
+      itemCount: bloc.length,
+      itemBuilder: (context, ind) => SizedBox(
+        height: 100,
+        width: 200,
+        child: Card(
+          // color: ColorManager.secondary,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          child: Row(
+            children: [
+              IconButton(
+                onPressed: () {},
+                icon: ImageIcon(
+                  AssetImage(ImageAssets.checkBoxIcon),
+                  size: AppSizes.size13,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  _text(bloc[ind].title, false,
+                      Theme.of(context).textTheme.bodyLarge),
+                  _text('   ${bloc[ind].discription}', false,
+                      Theme.of(context).textTheme.bodySmall),
+                ],
+              ),
+              const Spacer(),
+              IconButton(
+                onPressed: () {
+                  context.read<DatabaseBloc>().add(DeletFromDataBaseEvent(
+                        task: bloc[ind],
+                      ));
+                },
+                icon: const Icon(
+                  Icons.delete_outline_outlined,
+                  size: AppSizes.size13,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Grid View Option to view tasks in the style of a grid "two task per Row"
+  Widget _gridViewOption(List<ToDoTask> bloc) {
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: AppNumbers.crossAxisCount,
+        childAspectRatio: AppNumbers.childAspectRatio,
+        crossAxisSpacing: AppNumbers.crossAxisSpacing,
+        mainAxisSpacing: AppNumbers.mainAxisSpacing,
+      ),
+      itemCount: bloc.length,
+      itemBuilder: (BuildContext context, int index) => Card(
+        // color: ColorManager.secondary,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppSizes.size6)),
+        child: Padding(
+          padding: const EdgeInsets.all(AppSizes.size2),
+          child: GridTile(
+            header: _text(bloc[index].title, false,
+                Theme.of(context).textTheme.bodyLarge),
+            footer: Row(
+              children: [
+                const Spacer(),
+                IconButton(
+                  onPressed: () {},
+                  icon: ImageIcon(
+                    AssetImage(ImageAssets.checkBoxIcon),
+                    size: 30,
+                    color: Colors.white,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    context.read<DatabaseBloc>().add(DeletFromDataBaseEvent(
+                          task: bloc[index],
+                        ));
+                  },
+                  icon: const Icon(
+                    Icons.delete_outline_outlined,
+                    size: AppSizes.size13,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+            child: _text(bloc[index].discription, false,
+                Theme.of(context).textTheme.bodySmall),
+          ),
+        ),
+      ),
+    );
+  }
+
+  ///Home Page Tasks View Options
+  Widget _tasksViewInHomePage(List<ToDoTask> bloc) {
+    return Expanded(
+      flex: AppSizesInt.size3,
+      child: SizedBox(
+        height: AppNumbers.homePageTasksListHeight,
+        child: flagForHomeStyle ? _listViewOption(bloc) : _gridViewOption(bloc),
+      ),
+    );
+  }
+
+  /// Floating Action Button Widget
+  Widget _floatingActionButton() {
+    return InkWell(
+      onTap: () async {
+        await showModalBottomSheet(
+          backgroundColor: Colors.transparent,
+          context: context,
+          isScrollControlled: true,
+          isDismissible: true,
+          builder: (BuildContext context) {
+            return const FloatingButton();
+          },
+        ).then((value) =>
+            context.read<DatabaseBloc>().add(GetLocalDatabaseEvent()));
+      },
+      child: const Icon(
+        Icons.add_circle,
+        size: AppSizes.size28,
+        color: ColorManager.secondary,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    ///*******In this page we have used the DatabaseBloc to manage its States**********
+    ///the page will be built if one of the following states is emitted
+    ///1.LoadedDatabaseState
+    ///2.DeletedSuccessfullyState
     return BlocProvider<DatabaseBloc>(
       create: (context) => DatabaseBloc()..add(GetLocalDatabaseEvent()),
       child: BlocBuilder<DatabaseBloc, DatabaseState>(
         builder: (context, state) {
-          if (kDebugMode) {
-            print(state);
-          }
           late List<ToDoTask> bloc;
-          if (state is AddedSuccessfullyState) {
-            bloc = state.list;
-            if (kDebugMode) {
-              print("ADDEDSUCC");
-            }
-          }
-          if (state is LoadedDatabaseState) {
-            bloc = state.list;
-            if (kDebugMode) {
-              print("LOADEDSUCCESS");
-            }
-          }
-          if (state is DeletedSuccessfullyState) {
-            bloc = state.list;
-            if (kDebugMode) {
-              print("DELETED SUCCESS");
-            }
-          }
+          if (state is LoadedDatabaseState) bloc = state.list;
+          if (state is DeletedSuccessfullyState) bloc = state.list;
           if (state is LoadedDatabaseState ||
-              state is AddedSuccessfullyState ||
               state is DeletedSuccessfullyState) {
             return SafeArea(
               child: Scaffold(
                 body: Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 10, 5, 0),
+                  padding: const EdgeInsets.fromLTRB(
+                      AppNumbers.homePagePaddingLeft,
+                      AppNumbers.homePagePaddingTop,
+                      AppNumbers.homePagePaddingRight,
+                      AppNumbers.homePagePaddingBottom),
+
+                  /// the following colum contains three main items 1. row containing (icon,txt,icon)
+                  /// 2.text
+                  /// 3.tasks view(list Or grid)
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      _firstLineOfHomePageRowWidget(bloc),
+                      const SizedBox(height: AppSizes.size13),
                       Expanded(
-                        flex: 1,
-                        child: Row(
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  if (statee == 0) {
-                                    statee = 1;
-                                  } else {
-                                    statee = 0;
-                                  }
-                                  if (kDebugMode) {
-                                    print(statee);
-                                  }
-                                });
-                              },
-                              child: statee == 0
-                                  ? ImageIcon(
-                                      AssetImage(ImageAssets.menuIcon),
-                                      size: 30,
-                                    )
-                                  : const Icon(
-                                      Icons.menu,
-                                      size: 30,
-                                    ),
-                            ),
-                            const Spacer(),
-                            Text(
-                              AppStrings.title,
-                              style: Theme.of(context).textTheme.headline1,
-                            ),
-                            const Spacer(),
-                            IconButton(
-                                onPressed: () {
-                                  showSearch(
-                                      context: context,
-                                      delegate: Search(allTasks: bloc));
-                                },
-                                icon: const Icon(
-                                  Icons.search,
-                                )),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                          AppStrings.openingSentence,
-                          style: Theme.of(context).textTheme.bodyText1,
-                        ),
-                      ),
-                      _space,
-                      _space,
-                      _space,
-                      Expanded(
-                        flex: 10,
-                        child: SizedBox(
-                          height: 450,
-                          child: statee == 0
-                              ? ListView.builder(
-                                  padding: const EdgeInsets.all(10),
-                                  itemExtent: 100,
-                                  itemCount: bloc.length,
-                                  itemBuilder: (context, ind) => SizedBox(
-                                    height: 100,
-                                    width: 200,
-                                    child: Card(
-                                      // color: ColorManager.secondary,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15)),
-                                      child: Row(
-                                        children: [
-                                          IconButton(
-                                            onPressed: () {},
-                                            icon: const ImageIcon(
-                                              AssetImage('assets/img_4.png'),
-                                              size: 30,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            width: 10,
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                bloc[ind].title,
-                                                style: const TextStyle(
-                                                    fontSize: 40),
-                                              ),
-                                              Text(
-                                                "   ${bloc[ind].discription}",
-                                                style: const TextStyle(
-                                                    fontSize: 18),
-                                              ),
-                                            ],
-                                          ),
-                                          const Spacer(),
-                                          IconButton(
-                                            onPressed: () {
-                                              context
-                                                  .read<DatabaseBloc>()
-                                                  .add(DeletFromDataBaseEvent(
-                                                    task: bloc[ind],
-                                                  ));
-                                            },
-                                            icon: const Icon(
-                                              Icons.delete_outline_outlined,
-                                              size: 30,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              : GridView.builder(
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    childAspectRatio: 1,
-                                    crossAxisSpacing: 5,
-                                    mainAxisSpacing: 5,
-                                  ),
-                                  itemCount: bloc.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) => Card(
-                                    // color: ColorManager.secondary,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(15)),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: GridTile(
-                                        header: Text(
-                                          bloc[index].title,
-                                          style: const TextStyle(fontSize: 40),
-                                        ),
-                                        footer: Row(
-                                          children: [
-                                            const Spacer(),
-                                            IconButton(
-                                              onPressed: () {},
-                                              icon: const ImageIcon(
-                                                AssetImage('assets/img_4.png'),
-                                                size: 30,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                            IconButton(
-                                              onPressed: () {
-                                                context
-                                                    .read<DatabaseBloc>()
-                                                    .add(DeletFromDataBaseEvent(
-                                                      task: bloc[index],
-                                                    ));
-                                              },
-                                              icon: const Icon(
-                                                Icons.delete_outline_outlined,
-                                                size: 30,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            bloc[index].discription,
-                                            style:
-                                                const TextStyle(fontSize: 18),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                        ),
-                      ),
+                          flex: AppSizesInt.num1,
+                          child: _text(AppStrings.openingSentence, true,
+                              Theme.of(context).textTheme.labelMedium)),
+                      _space16,
+                      _tasksViewInHomePage(bloc),
                       // Spacer(),
                     ],
                   ),
                 ),
-                floatingActionButton: InkWell(
-                  onTap: () async {
-                    await showModalBottomSheet(
-                      backgroundColor: Colors.transparent,
-                      context: context,
-                      isScrollControlled: true,
-                      isDismissible: true,
-                      builder: (BuildContext context) {
-                        return const FloatingButton();
-                      },
-                    ).then((value) => context
-                        .read<DatabaseBloc>()
-                        .add(GetLocalDatabaseEvent()));
-                  },
-                  child: const Icon(
-                    Icons.add_circle,
-                    size: 60,
-                    color: ColorManager.secondary,
-                  ),
-                ),
+                floatingActionButton: _floatingActionButton(),
                 floatingActionButtonLocation:
                     FloatingActionButtonLocation.centerDocked,
                 bottomNavigationBar: const BottomBarForNavigation(),
               ),
             );
           }
+
+          /// if nothing of the previous states is emitted
           return const Center(
               child: SizedBox(
-                  height: 60, width: 60, child: CircularProgressIndicator()));
+                  height: AppSizes.size28,
+                  width: AppSizes.size28,
+                  child: CircularProgressIndicator()));
         },
-      ),
-    );
-  }
-}
-
-class Search extends SearchDelegate {
-  List<ToDoTask> result = [];
-  final List<ToDoTask> allTasks;
-  Search({required this.allTasks});
-  late List<ToDoTask> xx = allTasks;
-  late List<ToDoTask> provider = allTasks;
-  @override
-  List<Widget>? buildActions(BuildContext context) {
-    // TODO: implement buildActions
-    return [
-      IconButton(
-          onPressed: () {
-            if (query.isEmpty) {
-              close(context, null);
-            } else {
-              query = '';
-            }
-          },
-          icon: const Icon(Icons.clear))
-    ];
-  }
-
-  @override
-  Widget? buildLeading(BuildContext context) {
-    // TODO: implement buildLeading
-    return IconButton(
-        onPressed: () => close(context, null),
-        icon: const Icon(Icons.arrow_back));
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    // TODO: implement buildResults
-    if (result.isNotEmpty) {
-      result.clear();
-    }
-
-    String word1 = "";
-    String word2 = "";
-    String word3 = "";
-    if (kDebugMode) {
-      print("SEARCH BAR ${xx[0].title}");
-    }
-    for (int i = 0; i < xx.length; i++) {
-      word1 = xx[i].discription.toLowerCase();
-      if (kDebugMode) {
-        print(word1);
-      }
-      word3 = xx[i].title.toLowerCase();
-      word2 = query.toLowerCase();
-      if (word1.contains(word2) || word3.contains(word2)) {
-        result.add(xx[i]);
-      }
-    }
-    if (result.isEmpty || query.isEmpty) {
-      return Center(
-        child: Text(
-          "$query Not Fount",
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-      );
-    } else {
-      return SizedBox(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: ListView.builder(
-          padding: const EdgeInsets.all(10),
-          itemExtent: 100,
-          itemCount: result.length,
-          itemBuilder: (context, ind) => SizedBox(
-            height: 100,
-            width: 200,
-            child: Card(
-              // color: ColorManager.secondary,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
-              child: Row(
-                children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: const ImageIcon(
-                      AssetImage('assets/img_4.png'),
-                      size: 30,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        result[ind].title,
-                        style: const TextStyle(fontSize: 40),
-                      ),
-                      Text(
-                        "   ${result[ind].discription}",
-                        style: const TextStyle(fontSize: 18),
-                      ),
-                    ],
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    onPressed: () {
-                      //_onDelete(result[ind].id);
-                    },
-                    icon: const Icon(
-                      Icons.delete_outline_outlined,
-                      size: 30,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    // TODO: implement buildSuggestions
-
-    List<ToDoTask> suggestions = [];
-    final input = query.toLowerCase();
-
-    String word1, word2;
-    for (var item in provider) {
-      word1 = item.title.toLowerCase();
-      word2 = item.discription.toLowerCase();
-      if ((word1.contains(input) || word2.contains(input)) && input != '') {
-        if (kDebugMode) {
-          print(input);
-          print('$word1 22');
-          print('$word2 22');
-        }
-        suggestions.add(item);
-      }
-    }
-    if (suggestions.isEmpty || query.isEmpty) {
-      return Center(
-        child: Text(
-          "$query Not Fount",
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-      );
-    }
-    return SizedBox(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      child: ListView.builder(
-        padding: const EdgeInsets.all(10),
-        itemExtent: 100,
-        itemCount: suggestions.length,
-        itemBuilder: (context, ind) => SizedBox(
-          height: 100,
-          width: 200,
-          child: Card(
-            // color: ColorManager.secondary,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            child: Row(
-              children: [
-                IconButton(
-                  onPressed: () {},
-                  icon: const ImageIcon(
-                    AssetImage('assets/img_4.png'),
-                    size: 30,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      suggestions[ind].title,
-                      style: const TextStyle(fontSize: 40),
-                    ),
-                    Text(
-                      "   ${suggestions[ind].discription}",
-                      style: const TextStyle(fontSize: 18),
-                    ),
-                  ],
-                ),
-                const Spacer(),
-                IconButton(
-                  onPressed: () {
-                    //_onDelete(_suggestions[ind].id);
-                  },
-                  icon: const Icon(
-                    Icons.delete_outline_outlined,
-                    size: 30,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
       ),
     );
   }

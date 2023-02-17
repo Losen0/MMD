@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:todo_app/resources/app_numbers.dart';
 import 'package:todo_app/splash_screen/splash_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'bloc_theme_mode_classes/theme_mode_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding();
-  // Bloc.observer = MyBlocObserver();
-  HydratedBloc.storage = await HydratedStorage.build(
-    storageDirectory: await getApplicationDocumentsDirectory(),
-  );
   runApp(const MyApp());
 }
 
@@ -26,7 +21,8 @@ class MyApp extends StatelessWidget {
           BlocBuilder<ThemeModeBloc, ThemeModeState>(builder: (context, state) {
         if (state is LoadedThemeState) {
           return ScreenUtilInit(
-            designSize: const Size(360, 690),
+            designSize: const Size(
+                AppNumbers.screenUtilHeight, AppNumbers.screenUtilWidth),
             builder: (BuildContext context, Widget? child) => MaterialApp(
               debugShowCheckedModeBanner: false,
               theme: state.themeData,
@@ -34,9 +30,15 @@ class MyApp extends StatelessWidget {
             ),
           );
         }
+
+        ///**** if something went wrong with the theme bloc this circular indicator will work
         return const Center(
-            child: SizedBox(
-                height: 100, width: 50, child: CircularProgressIndicator()));
+          child: SizedBox(
+            height: AppNumbers.mainPageSizedBoxHeight,
+            width: AppNumbers.mainPageSizedBoxWidth,
+            child: CircularProgressIndicator(),
+          ),
+        );
       }),
     );
   }

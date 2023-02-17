@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:todo_app/home_page/home_page.dart';
+import 'package:todo_app/resources/app_numbers.dart';
 import 'package:todo_app/resources/color_resources.dart';
 import 'package:todo_app/resources/image_assets.dart';
 import 'package:todo_app/resources/text_resource.dart';
+import 'package:todo_app/splash_screen/widgets/image_handler.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -14,11 +16,24 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   Timer? _timer;
-  _startDelay() {
-    _timer = Timer(const Duration(seconds: 5), _goNext);
+
+  ///InitState
+  @override
+  void initState() {
+    super.initState();
+
+    ///this function for making a delay for the splash screen
+    _startDelay();
   }
 
-  _goNext() {
+  _startDelay() {
+    ///AppNumbers is a general class for all numbers in the app
+    ///_Navigate is what happen after the period of time
+    _timer = Timer(const Duration(seconds: AppNumbers.splashTimer), _navigate);
+  }
+
+  ///_navigate() to go to the home page after the splash screen and removing all the previous pages
+  _navigate() {
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
           builder: (context) => const HomePage(),
@@ -26,97 +41,65 @@ class _SplashScreenState extends State<SplashScreen> {
         (route) => false);
   }
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
+  /// Spaces in the splash screen made by the following sized Box ,
+  /// its sizes is from the AppSizes you can change it from resources
+  final SizedBox _space = const SizedBox(height: AppSizes.size1);
+  final SizedBox _space15 = const SizedBox(height: AppSizes.size6);
+  final SizedBox _space10 = const SizedBox(height: AppSizes.size3);
 
-    _startDelay();
+  ///used to replace Text to simplify the code and to make it readable
+  Widget _flexibleText(String txt, bool align, [TextStyle? txtStyle]) {
+    return Flexible(
+      flex: AppNumbers.splashTextFlex,
+      child: Align(
+        alignment: align ? Alignment.bottomLeft : Alignment.center,
+        child: Text(
+          txt,
+          style: txtStyle ?? Theme.of(context).textTheme.bodyLarge,
+        ),
+      ),
+    );
   }
 
-  static const SizedBox _space = SizedBox(
-    height: 5,
-  );
+  /// Notice that
+  /// AppNumber is used to put any specific important number in the app
+  /// it is in the resources in the same file with the AppSizes
+  ///
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorManager.splashBackground,
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+        padding: const EdgeInsets.fromLTRB(
+          AppNumbers.splashPaddingLeft,
+          AppNumbers.splashPaddingTop,
+          AppNumbers.splashPaddingRight,
+          AppNumbers.splashPaddingBottom,
+        ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
           children: [
-            const Flexible(
-              flex: 1,
-              child: Center(
-                child: Text(
-                  AppStrings.title,
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: ColorManager.primary,
-                  ),
-                ),
-              ),
-            ),
+            /// the arguments are(String for the text , boolean to make the alignment center or left ,
+            /// and there is an optional argument which is the Style of the text )
+            _flexibleText(AppStrings.title, false),
             _space,
-            const Flexible(
-              flex: 1,
-              child: Center(
-                child: Text(
-                  AppStrings.titleArabic,
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: ColorManager.primary,
-                  ),
-                ),
-              ),
-            ),
+            _flexibleText(AppStrings.titleArabic, false),
+            _space10,
+            ImageContainerWithExpanded(
+                img: ImageAssets.splashImage1,
+                flx: AppNumbers.splashImage1Flex),
+            _space15,
+            ImageContainerWithExpanded(
+                img: ImageAssets.splashImage2,
+                flx: AppNumbers.splashImage2Flex),
             _space,
-            _space,
-            Expanded(
-                flex: 6,
-                child: Center(
-                    child: ImageContainer(img: ImageAssets.splashImage1))),
-            _space,
-            _space,
-            _space,
-            Expanded(
-                flex: 3,
-                child: Center(
-                    child: ImageContainer(img: ImageAssets.splashImage2))),
-            _space,
-            const Flexible(
-              flex: 1,
-              child: Text(
-                AppStrings.splashString1,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  color: ColorManager.primary,
-                ),
-              ),
-            ),
-            const Flexible(
-              flex: 1,
-              child: Text(
-                AppStrings.splashString2,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: ColorManager.primary,
-                ),
-              ),
-            ),
-            Flexible(
-              flex: 1,
-              child: Row(children: [
-                const Spacer(),
-                ImageContainer(img: ImageAssets.splashImage3),
-              ]),
-            ),
+            _flexibleText(AppStrings.splashString1, true,
+                Theme.of(context).textTheme.displayMedium),
+            _flexibleText(AppStrings.splashString2, true,
+                Theme.of(context).textTheme.displayMedium),
+            ImageContainerWithFlexible(
+                img: ImageAssets.cupIcon, flx: AppNumbers.splashCupIconFlex),
           ],
         ),
       ),
@@ -125,21 +108,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    /// to cancel the timer if it has a periodic type
     _timer?.cancel();
     super.dispose();
-  }
-}
-
-class ImageContainer extends StatelessWidget {
-  final String img;
-  const ImageContainer({Key? key, required this.img}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Image(
-      image: AssetImage(img),
-      fit: BoxFit.fill,
-    );
   }
 }

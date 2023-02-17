@@ -1,27 +1,30 @@
 part of 'bloc_database_bloc.dart';
 
+///Handling Database Bloc Events
+///What can cause the page to be rebuild
 abstract class DatabaseEvent extends Equatable {}
 
+///user want to get Tasks from Database
 class GetLocalDatabaseEvent extends DatabaseEvent {
   @override
-  // TODO: implement props
   List<Object?> get props => [];
 }
+
+///user want to add a Task to Database
 
 class AddToDataBaseEvent extends DatabaseEvent {
   final ToDoTask task;
   AddToDataBaseEvent({required this.task});
 
   @override
-  // TODO: implement props
   List<Object?> get props => [];
 }
 
+///user want to delete a Task from  database
 class DeletFromDataBaseEvent extends DatabaseEvent {
   final ToDoTask task;
   DeletFromDataBaseEvent({required this.task});
 
   @override
-  // TODO: implement props
   List<Object?> get props => [];
 }

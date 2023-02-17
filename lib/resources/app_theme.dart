@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/resources/app_numbers.dart';
 
 import 'color_resources.dart';
 
@@ -8,15 +9,25 @@ enum AppTheme {
 }
 
 final appTheme = {
+  /// App Light Theme
+  /// start
   AppTheme.lightTheme: ThemeData(
+    ///App Main Theme Secondary then Primary Color
+    colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red),
+    scaffoldBackgroundColor: ColorManager.primary,
+
+    ///Bottom App Bar theme
     bottomAppBarColor: ColorManager.primary,
-    dialogBackgroundColor: ColorManager.secondary,
-    navigationBarTheme: const NavigationBarThemeData(
-      backgroundColor: ColorManager.white,
-    ),
-    cardTheme: const CardTheme(
-      color: ColorManager.secondary,
-    ),
+
+    ///Navigation Bar Theme
+    navigationBarTheme:
+        const NavigationBarThemeData(backgroundColor: ColorManager.white),
+
+    ///Card THeme
+    cardTheme: const CardTheme(color: ColorManager.secondary),
+
+    ///SnackBar Theme
+    ///start
     snackBarTheme: const SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
         backgroundColor: ColorManager.secondary,
@@ -24,36 +35,72 @@ final appTheme = {
           fontSize: 14,
           fontWeight: FontWeight.bold,
         )),
-    colorScheme: ColorScheme.fromSwatch(
-      primarySwatch: Colors.red,
-    ),
-    scaffoldBackgroundColor: ColorManager.primary,
+
+    ///end snackBar theme
+
+    /// App Text themes
+    /// start
     textTheme: const TextTheme(
-      headline1: TextStyle(
-          color: ColorManager.secondary,
-          fontSize: 32,
+      ///for Splash Screen texts
+      ///start
+      displayLarge: TextStyle(
+          color: ColorManager.white,
+          fontSize: AppSizes.size13,
           fontWeight: FontWeight.bold),
-      bodyText1: TextStyle(
+      displayMedium: TextStyle(
+          color: ColorManager.white,
+          fontSize: AppSizes.size10,
+          fontWeight: FontWeight.bold),
+
+      ///end Splash Screen texts
+
+      ///Pages texts themes
+      ///start
+      labelLarge: TextStyle(
           color: ColorManager.secondary,
-          fontSize: 20,
-          fontWeight: FontWeight.w400),
-      bodyText2: TextStyle(color: ColorManager.primary, fontSize: 16),
-      subtitle1: TextStyle(
-          color: ColorManager.primary,
-          fontWeight: FontWeight.bold,
-          fontSize: 24),
-      subtitle2: TextStyle(
-        color: ColorManager.black,
-        fontSize: 15,
-      ),
-      headline6: TextStyle(
-          color: ColorManager.grey2, fontSize: 15, fontWeight: FontWeight.bold),
-      //  bodySmall: TextStyle(color: ColorManager.black, fontSize: 15),
+          fontSize: AppSizes.size14,
+          fontWeight: FontWeight.bold),
+      labelMedium: TextStyle(
+          color: ColorManager.secondary,
+          fontSize: AppSizes.size9,
+          fontWeight: FontWeight.bold),
+
+      /// end Pages texts themes
+
+      /// Task Card Texts Theme
+      /// start
+      bodyLarge: TextStyle(
+          color: ColorManager.white,
+          fontSize: AppSizes.size10,
+          fontWeight: FontWeight.bold),
+      bodySmall: TextStyle(
+          color: ColorManager.white,
+          fontSize: AppSizes.size7,
+          fontWeight: FontWeight.w300),
+
+      /// end Task Card Texts Theme
+      bodyMedium: TextStyle(
+          color: ColorManager.white,
+          fontSize: AppSizes.size6,
+          fontWeight: FontWeight.bold),
+
+      displaySmall: TextStyle(
+          color: ColorManager.white, fontSize: 15, fontWeight: FontWeight.bold),
+
+      labelSmall: TextStyle(
+          color: ColorManager.white, fontSize: 24, fontWeight: FontWeight.bold),
     ),
     iconTheme: const IconThemeData(
       color: ColorManager.secondary,
     ),
+
+    ///end text Themes
   ),
+
+  ///end App Light Theme
+
+  ///*********************Dark Theme************************//
+  ///start
   AppTheme.darkTheme: ThemeData(
       bottomAppBarColor: ColorManager.darkPrimary,
       // brightness: Brightness.dark,
@@ -69,30 +116,61 @@ final appTheme = {
         primarySwatch: Colors.red,
       ),
       scaffoldBackgroundColor: ColorManager.darkPrimary,
+
+      ///***************Text Theme*************
       textTheme: const TextTheme(
-        headline1: TextStyle(
+        ///for Splash Screen texts
+        displayLarge: TextStyle(
             color: ColorManager.white,
-            fontSize: 32,
+            fontSize: AppSizes.size13,
             fontWeight: FontWeight.bold),
-        bodyText1: TextStyle(
+        displayMedium: TextStyle(
             color: ColorManager.white,
-            fontSize: 20,
-            fontWeight: FontWeight.w400),
-        bodyText2: TextStyle(color: ColorManager.secondary, fontSize: 16),
-        headline2: TextStyle(color: ColorManager.secondary, fontSize: 32),
-        subtitle1: TextStyle(
-            color: ColorManager.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 24),
-        subtitle2: TextStyle(
-          color: ColorManager.black,
-          fontSize: 15,
-        ),
-        headline6: TextStyle(
-            color: ColorManager.black,
-            fontSize: 15,
+            fontSize: AppSizes.size10,
             fontWeight: FontWeight.bold),
-        //  bodySmall: TextStyle(color: ColorManager.black, fontSize: 15),
+
+        ///***************************************///
+        displaySmall: TextStyle(
+            color: ColorManager.white,
+            fontSize: 12,
+            fontWeight: FontWeight.bold),
+        headlineLarge: TextStyle(
+            color: ColorManager.white,
+            fontSize: 30,
+            fontWeight: FontWeight.bold),
+        headlineSmall: TextStyle(
+            color: ColorManager.white,
+            fontSize: 30,
+            fontWeight: FontWeight.bold),
+        headlineMedium: TextStyle(
+            color: ColorManager.white,
+            fontSize: 30,
+            fontWeight: FontWeight.bold),
+        bodyLarge: TextStyle(
+            color: ColorManager.white,
+            fontSize: 30,
+            fontWeight: FontWeight.bold),
+        bodySmall: TextStyle(
+            color: ColorManager.white,
+            fontSize: 12,
+            fontWeight: FontWeight.bold),
+        bodyMedium: TextStyle(
+            color: ColorManager.white,
+            fontSize: 16,
+            fontWeight: FontWeight.bold),
+
+        labelLarge: TextStyle(
+            color: ColorManager.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold),
+        labelMedium: TextStyle(
+            color: ColorManager.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold),
+        labelSmall: TextStyle(
+            color: ColorManager.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold),
       ),
       iconTheme: const IconThemeData(
         color: ColorManager.white,
@@ -104,4 +182,6 @@ final appTheme = {
             fontSize: 14,
             fontWeight: FontWeight.bold,
           ))),
+
+  ///end App Dark Theme
 };

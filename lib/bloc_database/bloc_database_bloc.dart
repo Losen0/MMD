@@ -10,22 +10,24 @@ part 'bloc_database_state.dart';
 class DatabaseBloc extends Bloc<DatabaseEvent, DatabaseState> {
   final dp = DataBaseHelper.instance;
   DatabaseBloc() : super(DatabaseInitial()) {
-    on<DatabaseEvent>((event, emit) async {
-      // TODO: implement event handler
-      if (event is GetLocalDatabaseEvent) {
-        final tasks2 = await dp.loadTasksFromDatabase();
+    ///this is to load database and get all tasks saved in it
+    on<GetLocalDatabaseEvent>((event, emit) async {
+      final tasks2 = await dp.loadTasksFromDatabase();
+      emit(LoadedDatabaseState(list: tasks2));
+    });
 
-        emit(LoadedDatabaseState(list: tasks2));
-      } else if (event is AddToDataBaseEvent) {
-        ToDoTask task = event.task;
-        dp.addToDatabase(task);
-        //emit(AddedSuccessfullyState(list: tasks2));
-      } else if (event is DeletFromDataBaseEvent) {
-        ToDoTask task = event.task;
-        dp.removeFromDatabase(task.id);
-        final tasks2 = await dp.loadTasksFromDatabase();
-        emit(DeletedSuccessfullyState(list: tasks2));
-      }
+    ///this is to add new task to database
+    on<AddToDataBaseEvent>((event, emit) async {
+      ToDoTask task = event.task;
+      dp.addToDatabase(task);
+    });
+
+    ///this is to delete a task from database
+    on<DeletFromDataBaseEvent>((event, emit) async {
+      ToDoTask task = event.task;
+      dp.removeFromDatabase(task.id);
+      final tasks2 = await dp.loadTasksFromDatabase();
+      emit(DeletedSuccessfullyState(list: tasks2));
     });
   }
 }

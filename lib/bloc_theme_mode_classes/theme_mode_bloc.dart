@@ -9,24 +9,23 @@ part 'theme_mode_state.dart';
 
 class ThemeModeBloc extends Bloc<ThemeModeEvent, ThemeModeState> {
   ThemeModeBloc() : super(ThemeModeInitial()) {
+    ///this is to get the value of the theme from the SharedPreferences  using Theme Helper
     on<ThemeModeEvent>((event, emit) async {
-      // TODO: implement event handler
-      if (event is GetCurrentThemeEvent) {
-        final themeModeIndex =
-            await ThemeCashHelper().getCachedThemeMode() ?? 0;
-        final themeMode = AppTheme.values
-            .firstWhere((element) => element.index == themeModeIndex);
-        emit(LoadedThemeState(
-            themeData: appTheme[themeMode] as ThemeData,
-            index: themeModeIndex));
-      } else if (event is ThemeChangeEvent) {
-        var themeModeIndex = event.theme.index;
-        themeModeIndex == 0 ? themeModeIndex = 1 : themeModeIndex = 0;
-        await ThemeCashHelper().cacheThemeMode(themeModeIndex);
-        emit(LoadedThemeState(
-            themeData: appTheme[AppTheme.values[themeModeIndex]] as ThemeData,
-            index: themeModeIndex));
-      }
+      final themeModeIndex = await ThemeCashHelper().getCachedThemeMode() ?? 0;
+      final themeMode = AppTheme.values
+          .firstWhere((element) => element.index == themeModeIndex);
+      emit(LoadedThemeState(
+          themeData: appTheme[themeMode] as ThemeData, index: themeModeIndex));
+    });
+
+    ///this is when the theme changes and it put the new value in SharedPreferences using Theme Helper
+    on<ThemeChangeEvent>((event, emit) async {
+      var themeModeIndex = event.theme.index;
+      themeModeIndex == 0 ? themeModeIndex = 1 : themeModeIndex = 0;
+      await ThemeCashHelper().cacheThemeMode(themeModeIndex);
+      emit(LoadedThemeState(
+          themeData: appTheme[AppTheme.values[themeModeIndex]] as ThemeData,
+          index: themeModeIndex));
     });
   }
 }
