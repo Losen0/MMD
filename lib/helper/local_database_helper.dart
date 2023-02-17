@@ -1,9 +1,10 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:todo_app/Helper/local_database_helper.dart';
-import 'package:todo_app/todo/tasks.dart';
+
+import '../todo_model/tasks.dart';
 
 //DataBaseHelper x = DataBaseHelper();
 
@@ -33,24 +34,26 @@ class DataBaseHelper {
     ''');
   }
 
-  Future<List<todoTask>> _getTasks() async {
+  Future<List<ToDoTask>> _getTasks() async {
     Database db = await instance.database;
     try {
       var tasks = await db.query('Tasks', orderBy: 'id');
-      List<todoTask> tasksList = tasks.isNotEmpty
-          ? tasks.map((e) => todoTask.fromMap(e)).toList()
+      List<ToDoTask> tasksList = tasks.isNotEmpty
+          ? tasks.map((e) => ToDoTask.fromMap(e)).toList()
           : [];
       return tasksList;
     } catch (error) {
-      print(error);
-      List<todoTask> tasksList = [];
+      if (kDebugMode) {
+        print(error);
+      }
+      List<ToDoTask> tasksList = [];
       return tasksList;
     }
   }
 
-  Future<int> _add(todoTask Task) async {
+  Future<int> _add(ToDoTask task) async {
     Database db = await instance.database;
-    return await db.insert('Tasks', Task.toMap());
+    return await db.insert('Tasks', task.toMap());
   }
 
   Future<int> _remove(int id) async {
@@ -58,15 +61,15 @@ class DataBaseHelper {
     return await db.delete('Tasks', where: 'id = ?', whereArgs: [id]);
   }
 
-  Future addToDatabase(todoTask Task) async {
-    await _add(Task);
+  Future addToDatabase(ToDoTask task) async {
+    await _add(task);
   }
 
   Future removeFromDatabase(int id) async {
     await _remove(id);
   }
 
-  Future<List<todoTask>> loadTasksFromDatabase() async {
+  Future<List<ToDoTask>> loadTasksFromDatabase() async {
     return await _getTasks();
   }
 }

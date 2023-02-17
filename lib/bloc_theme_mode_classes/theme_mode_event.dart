@@ -5,7 +5,8 @@ abstract class ThemeModeEvent extends Equatable {}
 
 class GetCurrentThemeEvent extends ThemeModeEvent {
   @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+  // TODO: implement props
+  List<Object?> get props => [];
 }
 
 class ThemeChangeEvent extends ThemeModeEvent {

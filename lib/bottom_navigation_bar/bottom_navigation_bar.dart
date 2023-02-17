@@ -1,28 +1,26 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 import 'package:todo_app/bloc_theme_mode_classes/theme_mode_bloc.dart';
 import 'package:todo_app/resources/app_theme.dart';
-import 'package:todo_app/resources/themes.dart';
-
 import '../resources/color_resources.dart';
 
-class BottomBarForNAvigation extends StatefulWidget {
-  const BottomBarForNAvigation({Key? key}) : super(key: key);
+class BottomBarForNavigation extends StatefulWidget {
+  const BottomBarForNavigation({Key? key}) : super(key: key);
 
   @override
-  State<BottomBarForNAvigation> createState() => _BottomBarForNAvigationState();
+  State<BottomBarForNavigation> createState() => _BottomBarForNavigationState();
 }
 
-class _BottomBarForNAvigationState extends State<BottomBarForNAvigation> {
-  var _selectedpageindex = 0;
+class _BottomBarForNavigationState extends State<BottomBarForNavigation> {
+  var selectedPageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     // final _provider = Provider.of<Themes>(context);
     return BottomAppBar(
-      shape: CircularNotchedRectangle(),
-      child: Container(
+      shape: const CircularNotchedRectangle(),
+      child: SizedBox(
         height: 60,
         // color:
         //     _provider.theme ? ColorManager.primary : ColorManager.darkPrimary,
@@ -40,7 +38,7 @@ class _BottomBarForNAvigationState extends State<BottomBarForNAvigation> {
                       flex: 3,
                       child: Icon(
                         Icons.home_outlined,
-                        color: _selectedpageindex == 0
+                        color: selectedPageIndex == 0
                             ? ColorManager.secondary
                             : ColorManager.grey1,
                         size: 35,
@@ -52,7 +50,7 @@ class _BottomBarForNAvigationState extends State<BottomBarForNAvigation> {
                           'Home',
                           style: TextStyle(
                             fontSize: 10,
-                            color: _selectedpageindex == 0
+                            color: selectedPageIndex == 0
                                 ? ColorManager.secondary
                                 : ColorManager.grey1,
                           ),
@@ -61,41 +59,50 @@ class _BottomBarForNAvigationState extends State<BottomBarForNAvigation> {
                 ),
                 onPressed: () {
                   setState(() {
-                    _selectedpageindex = 0;
+                    selectedPageIndex = 0;
                   });
                 },
-                label: Text(''),
+                label: const Text(''),
               ),
             ),
             BlocBuilder<ThemeModeBloc, ThemeModeState>(
               builder: (context, state) {
-                final themeMode = ThemeModeBloc().themeState;
-                return Expanded(
-                  child: TextButton.icon(
-                    //  iconSize: 50.0,
-                    // padding: EdgeInsets.only(left: 28.0),
-                    icon: themeMode == 0
-                        ? Mode(
-                            name: "Night light",
-                            isSelected: _selectedpageindex,
-                            icon: 1,
-                          )
-                        : Mode(
-                            name: "Day light",
-                            isSelected: _selectedpageindex,
-                            icon: 0),
-                    onPressed: () {
-                      setState(() {
-                        //_bloc.add(OnChange());
-                        //  _provider.change(_provider.theme);
-                        themeMode != themeMode;
-                        context.read<ThemeModeBloc>().add(ThemeChangeEvent(
-                            theme: AppTheme.values[themeMode]));
-                      });
-                    },
-                    label: Text(''),
-                  ),
-                );
+                if (state is LoadedThemeState) {
+                  int themeMode = state.index;
+                  return Expanded(
+                    child: TextButton.icon(
+                      //  iconSize: 50.0,
+                      // padding: EdgeInsets.only(left: 28.0),
+                      icon: themeMode == 0
+                          ? Mode(
+                              name: "Night light",
+                              isSelected: selectedPageIndex,
+                              icon: 1,
+                            )
+                          : Mode(
+                              name: "Day light",
+                              isSelected: selectedPageIndex,
+                              icon: 0),
+                      onPressed: () {
+                        if (kDebugMode) {
+                          print("MAIN THEME MODE 1 $themeMode");
+                        }
+
+                        setState(() {
+                          //_bloc.add(OnChange());
+                          //  _provider.change(_provider.theme);
+                          context.read<ThemeModeBloc>().add(ThemeChangeEvent(
+                              theme: AppTheme.values[themeMode]));
+                        });
+                        if (kDebugMode) {
+                          print("MAIN THEME MODE 2 $themeMode");
+                        }
+                      },
+                      label: const Text(''),
+                    ),
+                  );
+                }
+                return const CircularProgressIndicator();
               },
             ),
           ],
@@ -133,7 +140,7 @@ class Mode extends StatelessWidget {
             flex: 1,
             child: Text(
               name,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 10,
                 color: ColorManager.grey1,
               ),

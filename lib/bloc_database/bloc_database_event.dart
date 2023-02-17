@@ -1,30 +1,27 @@
 part of 'bloc_database_bloc.dart';
 
-@immutable
 abstract class DatabaseEvent extends Equatable {}
 
 class GetLocalDatabaseEvent extends DatabaseEvent {
   @override
   // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [];
 }
 
 class AddToDataBaseEvent extends DatabaseEvent {
-  final todoTask task;
-
+  final ToDoTask task;
   AddToDataBaseEvent({required this.task});
 
   @override
   // TODO: implement props
-  List<Object?> get props => [task];
+  List<Object?> get props => [];
 }
 
 class DeletFromDataBaseEvent extends DatabaseEvent {
-  final todoTask task;
-
+  final ToDoTask task;
   DeletFromDataBaseEvent({required this.task});
 
   @override
   // TODO: implement props
-  List<Object?> get props => [task];
+  List<Object?> get props => [];
 }

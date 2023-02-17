@@ -11,13 +11,13 @@ final appTheme = {
   AppTheme.lightTheme: ThemeData(
     bottomAppBarColor: ColorManager.primary,
     dialogBackgroundColor: ColorManager.secondary,
-    navigationBarTheme: NavigationBarThemeData(
+    navigationBarTheme: const NavigationBarThemeData(
       backgroundColor: ColorManager.white,
     ),
-    cardTheme: CardTheme(
+    cardTheme: const CardTheme(
       color: ColorManager.secondary,
     ),
-    snackBarTheme: SnackBarThemeData(
+    snackBarTheme: const SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
         backgroundColor: ColorManager.secondary,
         contentTextStyle: TextStyle(
@@ -50,7 +50,7 @@ final appTheme = {
           color: ColorManager.grey2, fontSize: 15, fontWeight: FontWeight.bold),
       //  bodySmall: TextStyle(color: ColorManager.black, fontSize: 15),
     ),
-    iconTheme: IconThemeData(
+    iconTheme: const IconThemeData(
       color: ColorManager.secondary,
     ),
   ),
@@ -58,10 +58,10 @@ final appTheme = {
       bottomAppBarColor: ColorManager.darkPrimary,
       // brightness: Brightness.dark,
       dialogBackgroundColor: ColorManager.darkGrey,
-      navigationBarTheme: NavigationBarThemeData(
+      navigationBarTheme: const NavigationBarThemeData(
         backgroundColor: ColorManager.darkPrimary,
       ),
-      cardTheme: CardTheme(
+      cardTheme: const CardTheme(
         color: ColorManager.darkGrey,
       ),
       colorScheme: ColorScheme.fromSwatch(
@@ -94,10 +94,10 @@ final appTheme = {
             fontWeight: FontWeight.bold),
         //  bodySmall: TextStyle(color: ColorManager.black, fontSize: 15),
       ),
-      iconTheme: IconThemeData(
+      iconTheme: const IconThemeData(
         color: ColorManager.white,
       ),
-      snackBarTheme: SnackBarThemeData(
+      snackBarTheme: const SnackBarThemeData(
           behavior: SnackBarBehavior.floating,
           backgroundColor: ColorManager.secondary,
           contentTextStyle: TextStyle(

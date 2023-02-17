@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:todo_app/home_page.dart';
+import 'package:todo_app/home_page/home_page.dart';
 import 'package:todo_app/resources/color_resources.dart';
 import 'package:todo_app/resources/image_assets.dart';
 import 'package:todo_app/resources/text_resource.dart';
@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
   _goNext() {
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
-          builder: (context) => HomePage(),
+          builder: (context) => const HomePage(),
         ),
         (route) => false);
   }
@@ -113,7 +113,7 @@ class _SplashScreenState extends State<SplashScreen> {
             Flexible(
               flex: 1,
               child: Row(children: [
-                Spacer(),
+                const Spacer(),
                 ImageContainer(img: ImageAssets.splashImage3),
               ]),
             ),

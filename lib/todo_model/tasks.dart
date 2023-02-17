@@ -1,4 +1,4 @@
-class todoTask {
+class ToDoTask {
   final int id;
   final String title;
   final String discription;
@@ -7,12 +7,12 @@ class todoTask {
   static const String discriptionString = "discription";
   static const String completeString = "complete";
   static const String idString = "id";
-  todoTask(
+  ToDoTask(
       {required this.id,
       required this.title,
       required this.discription,
       required this.complete});
-  factory todoTask.fromMap(Map<String, dynamic> json) => todoTask(
+  factory ToDoTask.fromMap(Map<String, dynamic> json) => ToDoTask(
         id: json[idString],
         title: json[titleString],
         discription: json[discriptionString],
