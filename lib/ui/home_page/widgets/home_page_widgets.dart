@@ -14,7 +14,7 @@ class HomePageWidgets {
       return Align(
         alignment: align ? Alignment.centerLeft : Alignment.center,
         child: FittedBox(
-            fit: BoxFit.scaleDown,
+            fit: BoxFit.contain,
             child: Padding(
               padding: const EdgeInsets.all(AppSizes.num3),
               child: Text(
@@ -29,29 +29,31 @@ class HomePageWidgets {
   /// List View Option to view tasks in the style of a list "one task per Row"
   Widget listViewOption(List<ToDoTask> bloc) {
     return ListView.builder(
-      padding: const EdgeInsets.all(10),
-      itemExtent: 100,
+      padding: const EdgeInsets.all(AppSizes.size3),
+      itemExtent: AppSizes.size48,
       itemCount: bloc.length,
       itemBuilder: (context, ind) => SizedBox(
-        height: 100,
-        width: 200,
+        height: AppSizes.size48,
+        width: AppSizes.size95,
         child: Card(
           // color: ColorManager.secondary,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppSizes.size6)),
           child: Row(
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  context.read<DatabaseBloc>().add(DeletFromDataBaseEvent(
+                        task: bloc[ind],
+                      ));
+                },
                 icon: ImageIcon(
                   AssetImage(ImageAssets.checkBoxIcon),
                   size: AppSizes.size13,
                   color: Colors.white,
                 ),
               ),
-              const SizedBox(
-                width: 10,
-              ),
+              const SizedBox(width: AppSizes.size3),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -108,7 +110,7 @@ class HomePageWidgets {
                   onPressed: () {},
                   icon: ImageIcon(
                     AssetImage(ImageAssets.checkBoxIcon),
-                    size: 30,
+                    size: AppSizes.size13,
                     color: Colors.white,
                   ),
                 ),
