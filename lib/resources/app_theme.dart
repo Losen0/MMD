@@ -18,6 +18,7 @@ final appTheme = {
     ///Elevated Button
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
+        // use backendcolor insted of primary : primary will be deprecated
         primary: ColorManager.white,
         textStyle: const TextStyle(
             fontSize: AppSizes.size13, color: ColorManager.secondary),
@@ -33,7 +34,7 @@ final appTheme = {
 
     ///Card THeme
     cardTheme: const CardTheme(color: ColorManager.secondary),
-
+    // good commints bero
     ///SnackBar Theme
     snackBarTheme: const SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
@@ -52,6 +53,8 @@ final appTheme = {
           fontWeight: FontWeight.bold),
       displayMedium: TextStyle(
           color: ColorManager.white,
+          // I thik there is no need to make size in other class , now i have to go to class AppSize
+          // to know what is this size10 mean
           fontSize: AppSizes.size10,
           fontWeight: FontWeight.bold),
 
