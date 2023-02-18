@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todo_app/Helper/theme_helper.dart';
+import 'package:todo_app/helpers/theme_helper.dart';
 import 'package:todo_app/resources/app_theme.dart';
 
 part 'theme_mode_event.dart';

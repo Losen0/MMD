@@ -13,4 +13,5 @@ class AppStrings {
   static const String todoTitle2 = "Todo title....";
   static const String task = "Task";
   static const String task2 = "Write anything in your mind";
+  static const String showModalElevatedButtonText = "Save";
 }

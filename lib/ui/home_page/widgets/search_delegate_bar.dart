@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:todo_app/models/task_model/tasks.dart';
 import 'package:todo_app/resources/app_numbers.dart';
-
-import '../todo_model/tasks.dart';
+import 'package:todo_app/resources/image_assets.dart';
 
 class Search extends SearchDelegate {
   /// result list will contain all Tasks that match users input
@@ -99,8 +99,8 @@ class Search extends SearchDelegate {
                 children: [
                   IconButton(
                     onPressed: () {},
-                    icon: const ImageIcon(
-                      AssetImage('assets/checkbox_icon.png'),
+                    icon: ImageIcon(
+                      AssetImage(ImageAssets.checkBoxIcon),
                       size: AppSizes.size13,
                       color: Colors.white,
                     ),
@@ -112,11 +112,11 @@ class Search extends SearchDelegate {
                     children: [
                       Text(
                         result[ind].title,
-                        style: const TextStyle(fontSize: AppSizes.size18),
+                        style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       Text(
                         "   ${result[ind].discription}",
-                        style: const TextStyle(fontSize: AppSizes.size7),
+                        style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ],
                   ),
@@ -178,12 +178,17 @@ class Search extends SearchDelegate {
         padding: const EdgeInsets.all(AppSizes.size3),
         itemExtent: AppSizes.size48,
         itemCount: suggestions.length,
-        itemBuilder: (context, ind) => SizedBox(
-          height: AppSizes.size48,
-          width: AppSizes.size95,
-          child: Text(
-            suggestions[ind],
-            style: Theme.of(context).textTheme.displaySmall,
+        itemBuilder: (context, ind) => InkWell(
+          onTap: () {
+            query = suggestions[ind];
+          },
+          child: SizedBox(
+            height: AppSizes.size48,
+            width: AppSizes.size95,
+            child: Text(
+              suggestions[ind],
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
           ),
         ),
       ),
