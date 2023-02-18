@@ -31,6 +31,7 @@ class _BottomBarForNavigationState extends State<BottomBarForNavigation> {
                 child: TextButton.icon(
                   icon: const IconDependOnMode(
                     name: AppStrings.navigationBar1,
+                    //(Mario) why Icon 0
                     icon: 0,
                   ),
                   onPressed: () {},

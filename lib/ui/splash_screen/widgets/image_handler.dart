@@ -4,6 +4,7 @@
 import 'package:flutter/cupertino.dart';
 
 ///this class is to put the image in center and Expanded
+///(Mario) why using class
 class ImageContainerWithExpanded extends StatelessWidget {
   final String img;
   final int flx;

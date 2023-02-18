@@ -28,6 +28,7 @@ class HomePageWidgets {
 
   /// List View Option to view tasks in the style of a list "one task per Row"
   Widget listViewOption(List<ToDoTask> bloc) {
+    //Why using listViewOption
     return ListView.builder(
       padding: const EdgeInsets.all(10),
       itemExtent: 100,

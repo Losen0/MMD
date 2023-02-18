@@ -11,6 +11,7 @@ class ThemeModeBloc extends Bloc<ThemeModeEvent, ThemeModeState> {
   ThemeModeBloc() : super(ThemeModeInitial()) {
     ///this is to get the value of the theme from the SharedPreferences  using Theme Helper
     on<ThemeModeEvent>((event, emit) async {
+      //(Mario) I can't understand this
       final themeModeIndex = await ThemeCashHelper().getCachedThemeMode() ?? 0;
       final themeMode = AppTheme.values
           .firstWhere((element) => element.index == themeModeIndex);
