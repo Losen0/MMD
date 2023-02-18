@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_app/helpers/local_database_helper.dart';
-import 'package:todo_app/models/task_model/tasks.dart';
+import 'package:todo_app/models/tasks.dart';
 
 part 'bloc_database_event.dart';
 part 'bloc_database_state.dart';

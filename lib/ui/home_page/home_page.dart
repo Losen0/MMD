@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_app/blocs/bloc_database/bloc_database_bloc.dart';
-import 'package:todo_app/models/task_model/tasks.dart';
+import 'package:todo_app/models/tasks.dart';
 import 'package:todo_app/resources/app_numbers.dart';
 import 'package:todo_app/resources/image_assets.dart';
 import 'package:todo_app/resources/text_resource.dart';
@@ -15,11 +15,14 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
+// i feel lost from alot of commints
 class _HomePageState extends State<HomePage> {
   ///object from the widgets class
   final HomePageWidgets _homePageWidgets = HomePageWidgets();
 
   /// this flagForHomeStyle is to change from list mode to grid mode ant the opposite
+  // like this commite I think is is usels
+  // just if you named it isList or isGride it would be better and no need to commit
   bool flagForHomeStyle = true;
 
   /// the next variables is used for taking Spaces in the home page using SizedBox widget
@@ -54,9 +57,7 @@ class _HomePageState extends State<HomePage> {
           delegate: Search(allTasks: bloc),
         );
       },
-      icon: const Icon(
-        Icons.search,
-      ),
+      icon: const Icon(Icons.search),
     );
   }
 
@@ -150,6 +151,7 @@ class _HomePageState extends State<HomePage> {
           }
 
           /// if nothing of the previous states is emitted
+          /// very good state
           return const Center(
               child: SizedBox(
                   height: AppSizes.size38,

@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:todo_app/models/task_model/tasks.dart';
+import 'package:todo_app/models/tasks.dart';
 import 'package:todo_app/resources/app_numbers.dart';
 import 'package:todo_app/resources/image_assets.dart';
 
@@ -35,6 +35,7 @@ class Search extends SearchDelegate {
   }
 
   ///this is the leading icon used to close the search context
+  /// useles commit
   @override
   Widget? buildLeading(BuildContext context) {
     return IconButton(
