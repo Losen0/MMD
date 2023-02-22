@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/models/localizatoin_model/localization.dart';
 import 'package:todo_app/resources/app_numbers.dart';
 import 'package:todo_app/resources/color_resources.dart';
 
 class FloatingActionButtonWidgets {
   ///Used for all Texts in this page , require --> String , boolean for alignment or not
   /// and optional textStyle or use the one in it
-  static Widget text(String txt, bool align, [TextStyle? textStyle]) {
+  static Widget text(String txt, bool translate, [TextStyle? textStyle]) {
     return Builder(builder: (context) {
-      return Align(
-        alignment: align ? Alignment.centerLeft : Alignment.center,
-        child: FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Padding(
-              padding: const EdgeInsets.all(AppSizes.num3),
-              child: Text(
-                txt,
-                style: textStyle ?? Theme.of(context).textTheme.labelLarge,
-              ),
-            )),
+      return FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Padding(
+          padding: const EdgeInsets.all(AppSizes.num3),
+          child: Text(
+            translate
+                ? AppLocalization.of(context).getTranslatedValues(txt)
+                : txt,
+            style: textStyle ?? Theme.of(context).textTheme.labelLarge,
+          ),
+        ),
       );
     });
   }

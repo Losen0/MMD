@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_app/blocs/bloc_database/bloc_database_bloc.dart';
+import 'package:todo_app/models/localizatoin_model/localization.dart';
 import 'package:todo_app/models/task_model/tasks.dart';
 import 'package:todo_app/resources/app_numbers.dart';
 import 'package:todo_app/resources/color_resources.dart';
@@ -78,7 +79,8 @@ class _FloatingButtonState extends State<FloatingButton> {
                         enableSuggestions: true,
                         decoration: FloatingActionButtonWidgets
                             .inputDecorationForTextFormFields(
-                                AppStrings.todoTitle2,
+                                AppLocalization.of(context)
+                                    .getTranslatedValues(AppStrings.todoTitle2),
                                 Theme.of(context).textTheme.displaySmall),
                       ),
                       space10,
@@ -100,7 +102,9 @@ class _FloatingButtonState extends State<FloatingButton> {
                         style: Theme.of(context).textTheme.displaySmall,
                         enableSuggestions: true,
                         decoration: FloatingActionButtonWidgets
-                            .inputDecorationForTextFormFields(AppStrings.task2,
+                            .inputDecorationForTextFormFields(
+                                AppLocalization.of(context)
+                                    .getTranslatedValues(AppStrings.task2),
                                 Theme.of(context).textTheme.displaySmall),
                       ),
                       const SizedBox(height: AppSizes.size13),
@@ -131,7 +135,8 @@ class _FloatingButtonState extends State<FloatingButton> {
                                 }
                               },
                               child: Text(
-                                AppStrings.showModalElevatedButtonText,
+                                AppLocalization.of(context).getTranslatedValues(
+                                    AppStrings.showModalElevatedButtonText),
                                 style: Theme.of(context).textTheme.labelLarge,
                               )),
                         ),

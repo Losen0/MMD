@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_app/blocs/bloc_database/bloc_database_bloc.dart';
+import 'package:todo_app/blocs/bloc_localization/languages_bloc.dart';
+import 'package:todo_app/blocs/view_style_bloc/view_style_bloc.dart';
 import 'package:todo_app/models/task_model/tasks.dart';
 import 'package:todo_app/resources/app_numbers.dart';
 import 'package:todo_app/resources/image_assets.dart';
@@ -11,6 +13,10 @@ import 'package:todo_app/ui/home_page/widgets/search_delegate_bar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
+
+  /// the next variables is used for taking Spaces in the home page using SizedBox widget
+  static const SizedBox _space16 = SizedBox(height: AppSizes.size6);
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -20,58 +26,136 @@ class _HomePageState extends State<HomePage> {
   final HomePageWidgets _homePageWidgets = HomePageWidgets();
 
   /// this flagForHomeStyle is to change from list mode to grid mode ant the opposite
-  bool flagForHomeStyle = true;
+  late bool flagForHomeStyle;
 
-  /// the next variables is used for taking Spaces in the home page using SizedBox widget
-  static const SizedBox _space16 = SizedBox(height: AppSizes.size6);
+  late int currentLanguage;
 
   ///Leading Icon in the first line of the home Page "List Or Grid " Icons
   Widget _leadingMenuIcon() {
-    return InkWell(
-      onTap: () {
-        setState(() {
-          flagForHomeStyle = !flagForHomeStyle;
-        });
+    return BlocBuilder<ViewStyleBloc, ViewStyleState>(
+      builder: (context, state) {
+        return InkWell(
+          onTap: () {
+            flagForHomeStyle = !flagForHomeStyle;
+            int send = flagForHomeStyle ? 1 : 0;
+            BlocProvider.of<ViewStyleBloc>(context)
+                .add(ChangeViewStyleEvent(currentStyle: send));
+          },
+          child: flagForHomeStyle
+              ? ImageIcon(
+                  AssetImage(ImageAssets.menuIcon),
+                  size: AppSizes.size15,
+                )
+              : const Icon(
+                  Icons.menu,
+                  size: AppSizes.size15,
+                ),
+        );
       },
-      child: flagForHomeStyle
-          ? ImageIcon(
-              AssetImage(ImageAssets.menuIcon),
-              size: AppSizes.size15,
-            )
-          : const Icon(
-              Icons.menu,
-              size: AppSizes.size15,
-            ),
     );
   }
 
   /// this is for the Search Icon Button which trigger the Search context
   Widget _searchIconButton(List<ToDoTask> bloc) {
-    return IconButton(
-      onPressed: () {
-        showSearch(
-          context: context,
-          delegate: Search(allTasks: bloc),
-        );
-      },
-      icon: const Icon(
-        Icons.search,
-      ),
-    );
+    return Builder(builder: (context) {
+      return IconButton(
+        onPressed: () {
+          showSearch(
+            context: context,
+            delegate: Search(allTasks: bloc),
+          );
+        },
+        icon: const Icon(
+          Icons.search,
+        ),
+      );
+    });
   }
 
   /// The next is the Row which contain the menu icon the title and the Search icon
   Widget _firstLineOfHomePageRowWidget(List<ToDoTask> bloc) {
     return Expanded(
       flex: AppSizesInt.num1,
-      child: Row(
-        children: [
-          _leadingMenuIcon(),
-          const Spacer(),
-          _homePageWidgets.text(AppStrings.title, false),
-          const Spacer(),
-          _searchIconButton(bloc),
-        ],
+      child: BlocBuilder<LanguagesBloc, LanguagesState>(
+        builder: (context, state) {
+          if (state is LanguagesLoadedState) {
+            currentLanguage = state.currLanguage;
+          }
+          return SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Row(
+              children: [
+                const SizedBox(width: AppSizes.size3),
+                Flexible(flex: 2, child: _leadingMenuIcon()),
+                const Spacer(),
+
+                Expanded(
+                    flex: 4,
+                    child: _homePageWidgets.text(AppStrings.title, true)),
+
+                const Spacer(),
+
+                ///Switching Languages
+                Expanded(
+                  flex: 3,
+                  child: InkWell(
+                    onTap: () {
+                      BlocProvider.of<LanguagesBloc>(context).add(
+                          ChangeLanguageEvent(
+                              locale: const Locale('ar', ''), currentIndex: 0));
+                    },
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                      color: currentLanguage == 0 ? Colors.amber : Colors.white,
+                      child: SizedBox(
+                        height: AppSizes.size14,
+                        width: AppSizes.size38,
+                        child: Center(
+                          child: Text(
+                            AppStrings.arabic,
+                            style: Theme.of(context).textTheme.titleSmall,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(width: 5),
+
+                Expanded(
+                  flex: 3,
+                  child: InkWell(
+                    onTap: () {
+                      BlocProvider.of<LanguagesBloc>(context)
+                          .add(ChangeLanguageEvent(
+                        locale: const Locale('en', 'US'),
+                        currentIndex: 1,
+                      ));
+                    },
+                    child: Card(
+                      color: currentLanguage == 1 ? Colors.amber : Colors.white,
+                      child: SizedBox(
+                        height: AppSizes.size13,
+                        width: AppSizes.size38,
+                        child: Center(
+                          child: Text(
+                            AppStrings.english,
+                            style: Theme.of(context).textTheme.titleSmall,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+
+                Expanded(flex: 1, child: _searchIconButton(bloc)),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
@@ -96,65 +180,90 @@ class _HomePageState extends State<HomePage> {
     ///the page will be built if one of the following states is emitted
     ///1.LoadedDatabaseState
     ///2.DeletedSuccessfullyState
-    return BlocProvider<DatabaseBloc>(
-      create: (context) => DatabaseBloc()..add(GetLocalDatabaseEvent()),
-      child: BlocBuilder<DatabaseBloc, DatabaseState>(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => DatabaseBloc()..add(GetLocalDatabaseEvent()),
+        ),
+        BlocProvider(
+          create: (context) => ViewStyleBloc()..add(LoadViewStyleEvent()),
+        )
+      ],
+      child: BlocBuilder<LanguagesBloc, LanguagesState>(
         builder: (context, state) {
-          late List<ToDoTask> bloc;
-          if (state is LoadedDatabaseState) bloc = state.list;
-          if (state is DeletedSuccessfullyState) bloc = state.list;
-          if (state is LoadedDatabaseState ||
-              state is DeletedSuccessfullyState) {
-            return SafeArea(
-              child: Scaffold(
-                body: Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                      AppNumbers.homePagePaddingLeft,
-                      AppNumbers.homePagePaddingTop,
-                      AppNumbers.homePagePaddingRight,
-                      AppNumbers.homePagePaddingBottom),
+          return BlocBuilder<ViewStyleBloc, ViewStyleState>(
+            builder: (context, state) {
+              if (state is LoadedViewStyleState) {
+                flagForHomeStyle = state.currentStyle == 0 ? true : false;
+              }
+              return BlocBuilder<DatabaseBloc, DatabaseState>(
+                builder: (context, state) {
+                  late List<ToDoTask> bloc;
+                  if (state is LoadedDatabaseState) {
+                    bloc = state.list;
+                  }
+                  if (state is DeletedSuccessfullyState) bloc = state.list;
+                  if (state is LoadedDatabaseState ||
+                      state is DeletedSuccessfullyState) {
+                    return SafeArea(
+                      child: Scaffold(
+                        body: Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                              AppNumbers.homePagePaddingLeft,
+                              AppNumbers.homePagePaddingTop,
+                              AppNumbers.homePagePaddingRight,
+                              AppNumbers.homePagePaddingBottom),
 
-                  /// the following colum contains three main items 1. row containing (icon,txt,icon)
-                  /// 2.text
-                  /// 3.tasks view(list Or grid)
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _firstLineOfHomePageRowWidget(bloc),
-                      const SizedBox(height: AppSizes.size13),
-                      Expanded(
-                          flex: AppSizesInt.num1,
-                          child: _homePageWidgets.text(
-                              AppStrings.openingSentence,
-                              true,
-                              Theme.of(context).textTheme.labelMedium)),
-                      _space16,
-                      bloc.isEmpty
-                          ? Expanded(
-                              flex: AppSizesInt.size1,
-                              child: _homePageWidgets.text(
-                                  AppStrings.databaseEmptyResponse,
-                                  false,
-                                  Theme.of(context).textTheme.labelLarge),
-                            )
-                          : _tasksViewInHomePage(bloc),
-                    ],
-                  ),
-                ),
-                floatingActionButton: _homePageWidgets.floatingActionButton(),
-                floatingActionButtonLocation:
-                    FloatingActionButtonLocation.centerDocked,
-                bottomNavigationBar: const BottomBarForNavigation(),
-              ),
-            );
-          }
+                          /// the following colum contains three main items 1. row containing (icon,txt,icon)
+                          /// 2.text
+                          /// 3.tasks view(list Or grid)
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _firstLineOfHomePageRowWidget(bloc),
+                              const SizedBox(height: AppSizes.size13),
+                              Expanded(
+                                  flex: AppSizesInt.num1,
+                                  child: _homePageWidgets.text(
+                                      AppStrings.openingSentence,
+                                      true,
+                                      Theme.of(context).textTheme.labelMedium)),
+                              HomePage._space16,
+                              bloc.isEmpty
+                                  ? Expanded(
+                                      flex: AppSizesInt.size1,
+                                      child: Center(
+                                        child: _homePageWidgets.text(
+                                            AppStrings.databaseEmptyResponse,
+                                            true,
+                                            Theme.of(context)
+                                                .textTheme
+                                                .labelLarge),
+                                      ),
+                                    )
+                                  : _tasksViewInHomePage(bloc),
+                            ],
+                          ),
+                        ),
+                        floatingActionButton:
+                            _homePageWidgets.floatingActionButton(),
+                        floatingActionButtonLocation:
+                            FloatingActionButtonLocation.centerDocked,
+                        bottomNavigationBar: const BottomBarForNavigation(),
+                      ),
+                    );
+                  }
 
-          /// if nothing of the previous states is emitted
-          return const Center(
-              child: SizedBox(
-                  height: AppSizes.size38,
-                  width: AppSizes.size38,
-                  child: CircularProgressIndicator()));
+                  /// if nothing of the previous states is emitted
+                  return const Center(
+                      child: SizedBox(
+                          height: AppSizes.size38,
+                          width: AppSizes.size38,
+                          child: CircularProgressIndicator()));
+                },
+              );
+            },
+          );
         },
       ),
     );

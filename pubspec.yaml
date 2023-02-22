@@ -42,6 +42,9 @@ dependencies:
   flutter_screenutil: ^5.6.1
   path_provider: ^2.0.12
   equatable: ^2.0.5
+  flutter_localizations:
+    sdk: flutter
+  intl: any
 
 flutter_icons:
   android: "launcher_icon"
@@ -73,12 +76,14 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/splash_screen_main_pic.png
-    - assets/splash_screen_2.png
-    - assets/cup_icon.png
-    - assets/note_img__app_icon.png
-    - assets/checkbox_icon.png
-    - assets/menu.png
+    - assets/images/splash_screen_main_pic.png
+    - assets/images/splash_screen_2.png
+    - assets/images/cup_icon.png
+    - assets/images/note_img__app_icon.png
+    - assets/images/checkbox_icon.png
+    - assets/images/menu.png
+    - assets/languages/en.json
+    - assets/languages/ar.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

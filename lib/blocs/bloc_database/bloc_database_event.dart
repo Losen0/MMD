@@ -28,3 +28,13 @@ class DeletFromDataBaseEvent extends DatabaseEvent {
   @override
   List<Object?> get props => [];
 }
+
+///user want to change the view of the home page
+class UpdateStyleOfViewEvent extends DatabaseEvent {
+  final bool currentViewStyle;
+  final List<ToDoTask> tasks;
+  UpdateStyleOfViewEvent({required this.currentViewStyle, required this.tasks});
+
+  @override
+  List<Object?> get props => [currentViewStyle, tasks];
+}

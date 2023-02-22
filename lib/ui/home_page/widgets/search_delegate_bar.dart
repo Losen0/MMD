@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:todo_app/models/task_model/tasks.dart';
 import 'package:todo_app/resources/app_numbers.dart';
 import 'package:todo_app/resources/image_assets.dart';
+import 'package:todo_app/resources/text_resource.dart';
+
+import '../../../models/localizatoin_model/localization.dart';
 
 class Search extends SearchDelegate {
   /// result list will contain all Tasks that match users input
@@ -75,8 +78,8 @@ class Search extends SearchDelegate {
     if (result.isEmpty || query.isEmpty) {
       return Center(
         child: Text(
-          "$query Not Fount",
-          style: Theme.of(context).textTheme.bodyLarge,
+          "$query ${AppLocalization.of(context).getTranslatedValues(AppStrings.searchEmptyResponse)}",
+          style: Theme.of(context).textTheme.labelLarge,
         ),
       );
     } else {
@@ -166,8 +169,8 @@ class Search extends SearchDelegate {
     if (suggestions.isEmpty || query.isEmpty) {
       return Center(
         child: Text(
-          "$query Not Fount",
-          style: Theme.of(context).textTheme.bodyLarge,
+          "$query ${AppLocalization.of(context).getTranslatedValues(AppStrings.searchEmptyResponse)}",
+          style: Theme.of(context).textTheme.labelLarge,
         ),
       );
     }

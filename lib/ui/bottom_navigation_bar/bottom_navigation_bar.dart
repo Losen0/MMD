@@ -26,17 +26,9 @@ class _BottomBarForNavigationState extends State<BottomBarForNavigation> {
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Expanded(
-              child: AbsorbPointer(
-                child: TextButton.icon(
-                  icon: const IconDependOnMode(
-                    name: AppStrings.navigationBar1,
-                    icon: 0,
-                  ),
-                  onPressed: () {},
-                  label: const Text(''),
-                ),
-              ),
+            const Expanded(
+              child: IconDependOnMode(
+                  name: AppStrings.navigationBar1, iconIndex: 0),
             ),
 
             ///using BlocBuilder raped only on the Theme Mode Icon
@@ -45,21 +37,18 @@ class _BottomBarForNavigationState extends State<BottomBarForNavigation> {
                 if (state is LoadedThemeState) {
                   int themeMode = state.index;
                   return Expanded(
-                    child: TextButton.icon(
-                      icon: themeMode == 0
-                          ? const IconDependOnMode(
-                              name: AppStrings.navigationBar3,
-                              icon: 2,
-                            )
-                          : const IconDependOnMode(
-                              name: AppStrings.navigationBar2, icon: 1),
-                      onPressed: () {
+                    child: GestureDetector(
+                      onTap: () {
                         context.read<ThemeModeBloc>().add(
                               ThemeChangeEvent(
                                   theme: AppTheme.values[themeMode]),
                             );
                       },
-                      label: const Text(''),
+                      child: themeMode == 0
+                          ? const IconDependOnMode(
+                              name: AppStrings.navigationBar3, iconIndex: 2)
+                          : const IconDependOnMode(
+                              name: AppStrings.navigationBar2, iconIndex: 1),
                     ),
                   );
                 }

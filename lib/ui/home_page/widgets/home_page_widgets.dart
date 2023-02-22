@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_app/blocs/bloc_database/bloc_database_bloc.dart';
+import 'package:todo_app/models/localizatoin_model/localization.dart';
 import 'package:todo_app/models/task_model/tasks.dart';
 import 'package:todo_app/resources/app_numbers.dart';
 import 'package:todo_app/resources/color_resources.dart';
@@ -9,20 +10,19 @@ import 'package:todo_app/ui/floating_action_button/floating_action_button.dart';
 
 class HomePageWidgets {
   /// the following is to for Texts in HomePage
-  Widget text(String txt, bool align, [TextStyle? textStyle]) {
+  Widget text(String txt, bool translate, [TextStyle? textStyle]) {
     return Builder(builder: (context) {
-      return Align(
-        alignment: align ? Alignment.centerLeft : Alignment.center,
-        child: FittedBox(
-            fit: BoxFit.contain,
-            child: Padding(
-              padding: const EdgeInsets.all(AppSizes.num3),
-              child: Text(
-                txt,
-                style: textStyle ?? Theme.of(context).textTheme.labelLarge,
-              ),
-            )),
-      );
+      return FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Padding(
+            padding: const EdgeInsets.all(AppSizes.num3),
+            child: Text(
+              translate
+                  ? AppLocalization.of(context).getTranslatedValues(txt)
+                  : txt,
+              style: textStyle ?? Theme.of(context).textTheme.labelLarge,
+            ),
+          ));
     });
   }
 
@@ -58,10 +58,14 @@ class HomePageWidgets {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  text(bloc[ind].title, false,
-                      Theme.of(context).textTheme.bodyLarge),
-                  text('   ${bloc[ind].discription}', false,
-                      Theme.of(context).textTheme.bodySmall),
+                  Center(
+                    child: text(bloc[ind].title, false,
+                        Theme.of(context).textTheme.bodyLarge),
+                  ),
+                  Center(
+                    child: text('   ${bloc[ind].discription}', false,
+                        Theme.of(context).textTheme.bodySmall),
+                  ),
                 ],
               ),
               const Spacer(),
@@ -101,8 +105,10 @@ class HomePageWidgets {
         child: Padding(
           padding: const EdgeInsets.all(AppSizes.size2),
           child: GridTile(
-            header: text(bloc[index].title, false,
-                Theme.of(context).textTheme.bodyLarge),
+            header: Center(
+              child: text(bloc[index].title, false,
+                  Theme.of(context).textTheme.bodyLarge),
+            ),
             footer: Row(
               children: [
                 const Spacer(),
@@ -128,8 +134,10 @@ class HomePageWidgets {
                 ),
               ],
             ),
-            child: text(bloc[index].discription, false,
-                Theme.of(context).textTheme.bodySmall),
+            child: Center(
+              child: text(bloc[index].discription, false,
+                  Theme.of(context).textTheme.bodySmall),
+            ),
           ),
         ),
       ),

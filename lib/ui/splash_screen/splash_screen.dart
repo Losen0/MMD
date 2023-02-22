@@ -83,9 +83,9 @@ class _SplashScreenState extends State<SplashScreen> {
             children: [
               /// the arguments are(String for the text , boolean to make the alignment center or left ,
               /// and there is an optional argument which is the Style of the text )
-              _flexibleText(AppStrings.title, false),
+              _flexibleText(AppStrings.titleSplash, false),
               _space,
-              _flexibleText(AppStrings.titleArabic, false),
+              _flexibleText(AppStrings.titleArabicSplash, false),
               _space10,
               ImageContainerWithExpanded(
                   img: ImageAssets.splashImage1,

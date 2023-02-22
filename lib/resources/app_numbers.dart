@@ -57,6 +57,7 @@ class AppSizes {
   static const double size18 = 40;
   static const double size28 = 50;
   static const double size38 = 60;
+  static const double size42 = 64;
   static const double size48 = 100;
   static const double size74 = 150;
   static const double size95 = 200;
@@ -88,4 +89,5 @@ class AppSizesInt {
   static const int size17 = 38;
   static const int size18 = 40;
   static const int size28 = 60;
+  static const int size42 = 64;
 }
