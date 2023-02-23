@@ -6,7 +6,7 @@ import 'package:todo_app/resources/image_assets.dart';
 
 class AppLocalization {
   final Locale locale;
-
+  static late Locale currentLocale;
   AppLocalization({required this.locale});
 
   static AppLocalization of(BuildContext context) {

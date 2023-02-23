@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_app/blocs/bloc_theme_mode_classes/theme_mode_bloc.dart';
 import 'package:todo_app/resources/app_numbers.dart';
 import 'package:todo_app/resources/app_theme.dart';
-import 'package:todo_app/resources/text_resource.dart';
+import 'package:todo_app/resources/localization.dart';
 import 'package:todo_app/ui/bottom_navigation_bar/widgets/bottom_navigation_bar_widgets.dart';
 
 class BottomBarForNavigation extends StatefulWidget {
@@ -28,7 +28,7 @@ class _BottomBarForNavigationState extends State<BottomBarForNavigation> {
           children: <Widget>[
             const Expanded(
               child: IconDependOnMode(
-                  name: AppStrings.navigationBar1, iconIndex: 0),
+                  name: LocalizationKeys.navigationBar1, iconIndex: 0),
             ),
 
             ///using BlocBuilder raped only on the Theme Mode Icon
@@ -46,9 +46,11 @@ class _BottomBarForNavigationState extends State<BottomBarForNavigation> {
                       },
                       child: themeMode == 0
                           ? const IconDependOnMode(
-                              name: AppStrings.navigationBar3, iconIndex: 2)
+                              name: LocalizationKeys.navigationBar3,
+                              iconIndex: 2)
                           : const IconDependOnMode(
-                              name: AppStrings.navigationBar2, iconIndex: 1),
+                              name: LocalizationKeys.navigationBar2,
+                              iconIndex: 1),
                     ),
                   );
                 }

@@ -1,8 +1,7 @@
 import 'dart:ui';
-
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:todo_app/resources/text_resource.dart';
+import 'package:todo_app/resources/localization.dart';
 
 ///enum class to help in locals for the app
 enum AppLanguages {
@@ -27,7 +26,7 @@ class LocalizationHelper {
   ///this Method is for setting the old value into SharedPreferences
   Future<void> cacheLanguage(int appLanguage) async {
     final prefs = await getShared();
-    prefs.setInt(AppStrings.appLanguage, appLanguage);
+    prefs.setInt(LocalizationKeys.appLanguage, appLanguage);
     if (kDebugMode) {
       print("CAshed");
     }
@@ -36,6 +35,6 @@ class LocalizationHelper {
   ///this Method is for getting the new value from SharedPreferences
   Future<int?> getCachedAppLanguage() async {
     final SharedPreferences prefs = await getShared();
-    return prefs.getInt(AppStrings.appLanguage);
+    return prefs.getInt(LocalizationKeys.appLanguage);
   }
 }

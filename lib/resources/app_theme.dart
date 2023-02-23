@@ -46,7 +46,7 @@ final appTheme = {
     textTheme: const TextTheme(
       ///for translating buttons
       titleSmall: TextStyle(
-          color: ColorManager.secondary,
+          color: ColorManager.primary,
           fontSize: AppSizes.size5,
           fontWeight: FontWeight.bold),
 

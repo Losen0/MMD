@@ -5,8 +5,9 @@ import 'package:todo_app/models/localizatoin_model/localization.dart';
 import 'package:todo_app/models/task_model/tasks.dart';
 import 'package:todo_app/resources/app_numbers.dart';
 import 'package:todo_app/resources/color_resources.dart';
-import 'package:todo_app/resources/text_resource.dart';
 import 'package:todo_app/ui/floating_action_button/widgets/floating_action_button_widgets.dart';
+
+import '../../resources/localization.dart';
 
 class FloatingButton extends StatefulWidget {
   const FloatingButton({Key? key}) : super(key: key);
@@ -62,8 +63,10 @@ class _FloatingButtonState extends State<FloatingButton> {
                       const SizedBox(height: AppSizes.size3),
 
                       ///Title for the First TextFormField
-                      FloatingActionButtonWidgets.text(AppStrings.todoTitle,
-                          true, Theme.of(context).textTheme.labelSmall),
+                      FloatingActionButtonWidgets.text(
+                          LocalizationKeys.todoTitle,
+                          true,
+                          Theme.of(context).textTheme.labelSmall),
                       space,
 
                       ///First TextFormField to put Task Title
@@ -79,15 +82,15 @@ class _FloatingButtonState extends State<FloatingButton> {
                         enableSuggestions: true,
                         decoration: FloatingActionButtonWidgets
                             .inputDecorationForTextFormFields(
-                                AppLocalization.of(context)
-                                    .getTranslatedValues(AppStrings.todoTitle2),
+                                AppLocalization.of(context).getTranslatedValues(
+                                    LocalizationKeys.todoTitle2),
                                 Theme.of(context).textTheme.displaySmall),
                       ),
                       space10,
 
                       ///Title for the Second TextFormField
-                      FloatingActionButtonWidgets.text(AppStrings.task, true,
-                          Theme.of(context).textTheme.labelSmall),
+                      FloatingActionButtonWidgets.text(LocalizationKeys.task,
+                          true, Theme.of(context).textTheme.labelSmall),
                       space,
 
                       ///Second TextFormField to put Task discription
@@ -103,8 +106,8 @@ class _FloatingButtonState extends State<FloatingButton> {
                         enableSuggestions: true,
                         decoration: FloatingActionButtonWidgets
                             .inputDecorationForTextFormFields(
-                                AppLocalization.of(context)
-                                    .getTranslatedValues(AppStrings.task2),
+                                AppLocalization.of(context).getTranslatedValues(
+                                    LocalizationKeys.task2),
                                 Theme.of(context).textTheme.displaySmall),
                       ),
                       const SizedBox(height: AppSizes.size13),
@@ -136,7 +139,8 @@ class _FloatingButtonState extends State<FloatingButton> {
                               },
                               child: Text(
                                 AppLocalization.of(context).getTranslatedValues(
-                                    AppStrings.showModalElevatedButtonText),
+                                    LocalizationKeys
+                                        .showModalElevatedButtonText),
                                 style: Theme.of(context).textTheme.labelLarge,
                               )),
                         ),

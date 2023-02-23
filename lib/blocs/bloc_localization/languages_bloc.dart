@@ -16,12 +16,13 @@ class LanguagesBloc extends Bloc<LanguagesEvent, LanguagesState> {
       emit(LanguagesLoadedState(locale: locale, currLanguage: language));
     });
     on<ChangeLanguageEvent>((event, emit) async {
-      int newIndex = event.currentIndex;
-      //newIndex == 1 ? newIndex = 0 : newIndex = 1;
+      int newIndex = await LocalizationHelper().getCachedAppLanguage() ?? 1;
+      newIndex = newIndex == 1 ? 0 : 1;
       await LocalizationHelper().cacheLanguage(newIndex);
-      Locale locale = event.locale;
 
-      emit(LanguagesLoadedState(locale: locale, currLanguage: newIndex));
+      emit(LanguagesLoadedState(
+          locale: appLanguages[AppLanguages.values[newIndex]] as Locale,
+          currLanguage: newIndex));
     });
   }
 }

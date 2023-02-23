@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:todo_app/models/task_model/tasks.dart';
 import 'package:todo_app/resources/app_numbers.dart';
 import 'package:todo_app/resources/image_assets.dart';
-import 'package:todo_app/resources/text_resource.dart';
+import 'package:todo_app/resources/localization.dart';
 
 import '../../../models/localizatoin_model/localization.dart';
 
@@ -78,7 +78,7 @@ class Search extends SearchDelegate {
     if (result.isEmpty || query.isEmpty) {
       return Center(
         child: Text(
-          "$query ${AppLocalization.of(context).getTranslatedValues(AppStrings.searchEmptyResponse)}",
+          "$query ${AppLocalization.of(context).getTranslatedValues(LocalizationKeys.searchEmptyResponse)}",
           style: Theme.of(context).textTheme.labelLarge,
         ),
       );
@@ -169,7 +169,7 @@ class Search extends SearchDelegate {
     if (suggestions.isEmpty || query.isEmpty) {
       return Center(
         child: Text(
-          "$query ${AppLocalization.of(context).getTranslatedValues(AppStrings.searchEmptyResponse)}",
+          "$query ${AppLocalization.of(context).getTranslatedValues(LocalizationKeys.searchEmptyResponse)}",
           style: Theme.of(context).textTheme.labelLarge,
         ),
       );

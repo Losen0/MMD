@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:todo_app/resources/app_numbers.dart';
 import 'package:todo_app/resources/color_resources.dart';
 import 'package:todo_app/resources/image_assets.dart';
+import 'package:todo_app/resources/localization.dart';
 import 'package:todo_app/resources/text_resource.dart';
 import 'package:todo_app/ui/home_page/home_page.dart';
 import 'package:todo_app/ui/splash_screen/widgets/image_handler.dart';
@@ -95,9 +96,9 @@ class _SplashScreenState extends State<SplashScreen> {
                   img: ImageAssets.splashImage2,
                   flx: AppNumbers.splashImage2Flex),
               _space,
-              _flexibleText(AppStrings.splashString1, true,
+              _flexibleText(LocalizationKeys.splashString1, true,
                   Theme.of(context).textTheme.displayMedium),
-              _flexibleText(AppStrings.splashString2, true,
+              _flexibleText(LocalizationKeys.splashString2, true,
                   Theme.of(context).textTheme.displayMedium),
               ImageContainerWithFlexible(
                   img: ImageAssets.cupIcon, flx: AppNumbers.splashCupIconFlex),

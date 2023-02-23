@@ -3,9 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_app/blocs/bloc_database/bloc_database_bloc.dart';
 import 'package:todo_app/blocs/bloc_localization/languages_bloc.dart';
 import 'package:todo_app/blocs/view_style_bloc/view_style_bloc.dart';
+import 'package:todo_app/models/localizatoin_model/localization.dart';
 import 'package:todo_app/models/task_model/tasks.dart';
 import 'package:todo_app/resources/app_numbers.dart';
 import 'package:todo_app/resources/image_assets.dart';
+import 'package:todo_app/resources/localization.dart';
 import 'package:todo_app/resources/text_resource.dart';
 import 'package:todo_app/ui/bottom_navigation_bar/bottom_navigation_bar.dart';
 import 'package:todo_app/ui/home_page/widgets/home_page_widgets.dart';
@@ -106,14 +108,14 @@ class _HomePageState extends State<HomePage> {
                     },
                     child: Card(
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5)),
-                      color: currentLanguage == 0 ? Colors.amber : Colors.white,
+                          borderRadius: BorderRadius.circular(AppSizes.size11)),
                       child: SizedBox(
                         height: AppSizes.size14,
                         width: AppSizes.size38,
                         child: Center(
                           child: Text(
-                            AppStrings.arabic,
+                            AppLocalization.of(context)
+                                .getTranslatedValues(LocalizationKeys.lang),
                             style: Theme.of(context).textTheme.titleSmall,
                           ),
                         ),
@@ -122,33 +124,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
 
-                const SizedBox(width: 5),
-
-                Expanded(
-                  flex: 3,
-                  child: InkWell(
-                    onTap: () {
-                      BlocProvider.of<LanguagesBloc>(context)
-                          .add(ChangeLanguageEvent(
-                        locale: const Locale('en', 'US'),
-                        currentIndex: 1,
-                      ));
-                    },
-                    child: Card(
-                      color: currentLanguage == 1 ? Colors.amber : Colors.white,
-                      child: SizedBox(
-                        height: AppSizes.size13,
-                        width: AppSizes.size38,
-                        child: Center(
-                          child: Text(
-                            AppStrings.english,
-                            style: Theme.of(context).textTheme.titleSmall,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
                 const SizedBox(width: 10),
 
                 Expanded(flex: 1, child: _searchIconButton(bloc)),
@@ -225,7 +200,7 @@ class _HomePageState extends State<HomePage> {
                               Expanded(
                                   flex: AppSizesInt.num1,
                                   child: _homePageWidgets.text(
-                                      AppStrings.openingSentence,
+                                      LocalizationKeys.openingSentence,
                                       true,
                                       Theme.of(context).textTheme.labelMedium)),
                               HomePage._space16,
@@ -234,7 +209,8 @@ class _HomePageState extends State<HomePage> {
                                       flex: AppSizesInt.size1,
                                       child: Center(
                                         child: _homePageWidgets.text(
-                                            AppStrings.databaseEmptyResponse,
+                                            LocalizationKeys
+                                                .databaseEmptyResponse,
                                             true,
                                             Theme.of(context)
                                                 .textTheme
