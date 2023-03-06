@@ -41,44 +41,59 @@ class HomePageWidgets {
               borderRadius: BorderRadius.circular(AppSizes.size6)),
           child: Row(
             children: [
-              IconButton(
-                onPressed: () {
-                  context.read<DatabaseBloc>().add(DeletFromDataBaseEvent(
-                        task: bloc[ind],
-                      ));
-                },
-                icon: ImageIcon(
-                  AssetImage(ImageAssets.checkBoxIcon),
-                  size: AppSizes.size13,
-                  color: Colors.white,
+              Flexible(
+                flex: 1,
+                child: IconButton(
+                  onPressed: () {
+                    context.read<DatabaseBloc>().add(DeletFromDataBaseEvent(
+                          task: bloc[ind],
+                        ));
+                  },
+                  icon: ImageIcon(
+                    AssetImage(ImageAssets.checkBoxIcon),
+                    size: AppSizes.size13,
+                    color: Colors.white,
+                  ),
                 ),
               ),
               const SizedBox(width: AppSizes.size3),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Center(
-                    child: text(bloc[ind].title, false,
-                        Theme.of(context).textTheme.bodyLarge),
-                  ),
-                  Center(
-                    child: text('   ${bloc[ind].discription}', false,
-                        Theme.of(context).textTheme.bodySmall),
-                  ),
-                ],
+              Expanded(
+                flex: 4,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 4,
+                      child: Center(
+                        child: text(bloc[ind].title, false,
+                            Theme.of(context).textTheme.bodyLarge),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Center(
+                        child: text('   ${bloc[ind].discription}', false,
+                            Theme.of(context).textTheme.bodySmall),
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const Spacer(),
-              IconButton(
-                onPressed: () {
-                  context.read<DatabaseBloc>().add(DeletFromDataBaseEvent(
-                        task: bloc[ind],
-                      ));
-                },
-                icon: const Icon(
-                  Icons.delete_outline_outlined,
-                  size: AppSizes.size13,
-                  color: Colors.white,
+              Flexible(
+                flex: 1,
+                child: IconButton(
+                  onPressed: () {
+                    context.read<DatabaseBloc>().add(DeletFromDataBaseEvent(
+                          task: bloc[ind],
+                        ));
+                  },
+                  icon: const Icon(
+                    Icons.delete_outline_outlined,
+                    size: AppSizes.size13,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ],

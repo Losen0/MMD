@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo_app/blocs/bloc_database/bloc_database_bloc.dart';
 import 'package:todo_app/models/task_model/tasks.dart';
 import 'package:todo_app/resources/app_numbers.dart';
 import 'package:todo_app/resources/image_assets.dart';
@@ -100,38 +102,52 @@ class Search extends SearchDelegate {
                   borderRadius: BorderRadius.circular(AppSizes.size4)),
               child: Row(
                 children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: ImageIcon(
-                      AssetImage(ImageAssets.checkBoxIcon),
-                      size: AppSizes.size13,
-                      color: Colors.white,
+                  Flexible(
+                    flex: 1,
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: ImageIcon(
+                        AssetImage(ImageAssets.checkBoxIcon),
+                        size: AppSizes.size13,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                   const SizedBox(width: AppSizes.size3),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        result[ind].title,
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                      Text(
-                        "   ${result[ind].discription}",
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    ],
+                  Expanded(
+                    flex: 4,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Flexible(
+                          flex: 2,
+                          child: Text(
+                            result[ind].title,
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                        ),
+                        Flexible(
+                          child: Text(
+                            "   ${result[ind].discription}",
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   const Spacer(),
-                  IconButton(
-                    onPressed: () {
-                      //_onDelete(result[ind].id);
-                    },
-                    icon: const Icon(
-                      Icons.delete_outline_outlined,
-                      size: AppSizes.size13,
-                      color: Colors.white,
+                  Flexible(
+                    flex: 1,
+                    child: IconButton(
+                      onPressed: () {
+                        //_onDelete(result[ind].id);
+                      },
+                      icon: const Icon(
+                        Icons.delete_outline_outlined,
+                        size: AppSizes.size13,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ],
