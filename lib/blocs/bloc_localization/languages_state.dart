@@ -15,6 +15,5 @@ class LanguagesLoadedState extends LanguagesState {
   LanguagesLoadedState({required this.locale, required this.currLanguage});
 
   @override
-  // TODO: implement props
   List<Object?> get props => [locale];
 }

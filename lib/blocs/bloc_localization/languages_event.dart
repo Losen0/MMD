@@ -5,7 +5,6 @@ abstract class LanguagesEvent extends Equatable {}
 
 class LoadLanguageEvent extends LanguagesEvent {
   @override
-  // TODO: implement props
   List<Object?> get props => [];
 }
 
@@ -14,6 +13,5 @@ class ChangeLanguageEvent extends LanguagesEvent {
   final int currentIndex;
   ChangeLanguageEvent({required this.locale, required this.currentIndex});
   @override
-  // TODO: implement props
   List<Object?> get props => [];
 }
