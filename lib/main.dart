@@ -11,9 +11,7 @@ import 'models/localizatoin_model/localization.dart';
 
 void main() async {
   WidgetsFlutterBinding();
-  runApp(BlocProvider<LanguagesBloc>(
-      create: (context) => LanguagesBloc()..add(LoadLanguageEvent()),
-      child: const MyApp()));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -22,8 +20,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ///wrapped with Theme builder to manage the app theme Mode
-    return BlocProvider(
-      create: (context) => ThemeModeBloc()..add(GetCurrentThemeEvent()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => ThemeModeBloc()..add(GetCurrentThemeEvent()),
+        ),
+        BlocProvider(
+          create: (context) => LanguagesBloc()..add(LoadLanguageEvent()),
+        ),
+      ],
       child: BlocBuilder<LanguagesBloc, LanguagesState>(
         builder: (context, state) {
           final Locale locale;

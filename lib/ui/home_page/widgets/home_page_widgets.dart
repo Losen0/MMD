@@ -12,17 +12,18 @@ class HomePageWidgets {
   /// the following is to for Texts in HomePage
   Widget text(String txt, bool translate, [TextStyle? textStyle]) {
     return Builder(builder: (context) {
-      return FittedBox(
+      return Padding(
+        padding: const EdgeInsets.all(AppSizes.num3),
+        child: FittedBox(
           fit: BoxFit.scaleDown,
-          child: Padding(
-            padding: const EdgeInsets.all(AppSizes.num3),
-            child: Text(
-              translate
-                  ? AppLocalization.of(context).getTranslatedValues(txt)
-                  : txt,
-              style: textStyle ?? Theme.of(context).textTheme.labelLarge,
-            ),
-          ));
+          child: Text(
+            translate
+                ? AppLocalization.of(context).getTranslatedValues(txt)
+                : txt,
+            style: textStyle ?? Theme.of(context).textTheme.labelLarge,
+          ),
+        ),
+      );
     });
   }
 
